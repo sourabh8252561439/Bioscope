@@ -55,6 +55,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        {/* Google AdSense verification & script – must be in <head> */}
+        <meta
+          name="google-adsense-account"
+          content="ca-pub-3129438098804302"
+        />
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js?client=ca-pub-3129438098804302"
+          crossOrigin="anonymous"
+          strategy="beforeInteractive"
+        />
+      </head>
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
@@ -112,14 +126,6 @@ export default function RootLayout({
             gtag('config', 'G-F6NY6NC8RS');
           `}
         </Script>
-
-        {/* Google AdSense */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js?client=ca-pub-3129438098804302"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
 
         {children}
         <Toaster />
