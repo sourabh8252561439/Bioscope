@@ -58,7 +58,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        {/* Original scripts */}
+        {/* Original ad scripts */}
         <Script
           src="https://arisefeistyleery.com/b5/50/eb/b550eb69123ed4e5199b2bf3931ef814.js"
           strategy="afterInteractive"
@@ -69,14 +69,11 @@ export default function RootLayout({
         />
 
         {/* Additional ad scripts */}
-
-        {/* d0zf0dbg script */}
         <Script
           src="https://arisefeistyleery.com/d0zf0dbg?key=d0ade1e25b70c28b37576631d9c83cfc"
           strategy="afterInteractive"
         />
 
-        {/* invoke.js with container */}
         <div id="container-18318b38d73ce552b62fdfb9c479c313"></div>
         <Script
           async
@@ -85,7 +82,6 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
 
-        {/* atOptions block 1 */}
         <Script id="atoptions-ac5a" strategy="afterInteractive">
           {`atOptions = { 'key' : 'ac5a212c8b9376d9e30156274c3208db', 'format' : 'iframe', 'height' : 300, 'width' : 160, 'params' : {} };`}
         </Script>
@@ -94,7 +90,6 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
 
-        {/* atOptions block 2 */}
         <Script id="atoptions-ea08" strategy="afterInteractive">
           {`atOptions = { 'key' : 'ea0870a4e0eed04e401f97a4c656c194', 'format' : 'iframe', 'height' : 60, 'width' : 468, 'params' : {} };`}
         </Script>
@@ -102,6 +97,21 @@ export default function RootLayout({
           src="https://arisefeistyleery.com/ea0870a4e0eed04e401f97a4c656c194/invoke.js"
           strategy="afterInteractive"
         />
+
+        {/* Google Analytics */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-F6NY6NC8RS"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-F6NY6NC8RS');
+          `}
+        </Script>
 
         {children}
         <Toaster />
