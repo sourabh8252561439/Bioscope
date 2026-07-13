@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -52,16 +53,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Theme is set to "dark" by default on the server. No inline <script> is used
-  // because browser extensions (uBlock/AdGuard ExtendedCss) can mutate inline
-  // script content before React hydrates, causing hydration mismatches. The
-  // client useTheme() hook reads localStorage after mount and switches if the
-  // user previously chose "light".
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
+        <Script
+          src="https://arisefeistyleery.com/b5/50/eb/b550eb69123ed4e5199b2bf3931ef814.js"
+          strategy="afterInteractive"
+        />
+
+        <Script
+          src="https://arisefeistyleery.com/c0/fd/c9/c0fdc90a8f130bd7e41d31784384817a.js"
+          strategy="afterInteractive"
+        />
+
         {children}
         <Toaster />
       </body>
