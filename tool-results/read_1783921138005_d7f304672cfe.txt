@@ -1,0 +1,578 @@
+     1→## Error Type
+     2→Console Error
+     3→
+     4→## Error Message
+     5→A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+     6→
+     7→- A server/client branch `if (typeof window !== 'undefined')`.
+     8→- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+     9→- Date formatting in a user's locale which doesn't match the server.
+    10→- External changing data without sending a snapshot of it along with the HTML.
+    11→- Invalid HTML tag nesting.
+    12→
+    13→It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+    14→
+    15→https://react.dev/link/hydration-mismatch
+    16→
+    17→  ...
+    18→    <SegmentViewNode type="page" pagePath="page.tsx">
+    19→      <SegmentTrieNode>
+    20→      <Home>
+    21→        <div id="top" className="flex min-h...">
+    22→          <TopNav>
+    23→          <main className="flex-1">
+    24→            <HeroLab>
+    25→            <SystemsOverview>
+    26→            <MicroscopeJourney>
+    27→              <section id="microscope" className="relative s...">
+    28→                <div className="mx-auto ma...">
+    29→                  <SectionHeading>
+    30→                  <div className="grid gap-6...">
+    31→                    <div>
+    32→                    <div className="lg:col-spa...">
+    33→                      <div className="glass-stro...">
+    34→                        <Particles color="#e8e0d0">
+    35→                          <div className="pointer-ev...">
+    36→                            <motion.span className="absolute r..." style={{left:"38.9...", ...}} animate={{y:[...], ...}} ...>
+    37→                              <span
+    38→                                className="absolute rounded-full"
+    39→                                style={{
+    40→+                                 left: "38.93042687984989%"
+    41→-                                 left: "99.1705%"
+    42→+                                 top: "25.282936217774367%"
+    43→-                                 top: "51.4037%"
+    44→+                                 width: 2.560642515839171
+    45→-                                 width: "1.35878px"
+    46→+                                 height: 2.560642515839171
+    47→-                                 height: "1.35878px"
+    48→+                                 background: "#e8e0d0"
+    49→+                                 opacity: 0.5
+    50→-                                 opacity: "0.5"
+    51→+                                 boxShadow: "0 0 7.681927547517513px #e8e0d0"
+    52→-                                 background-image: "initial"
+    53→-                                 background-position-x: "initial"
+    54→-                                 background-position-y: "initial"
+    55→-                                 background-size: "initial"
+    56→-                                 background-repeat: "initial"
+    57→-                                 background-attachment: "initial"
+    58→-                                 background-origin: "initial"
+    59→-                                 background-clip: "initial"
+    60→-                                 background-color: "rgb(232, 224, 208)"
+    61→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 4.07634px"
+    62→                                }}
+    63→                                ref={function useMotionRef.useCallback}
+    64→                              >
+    65→                            <motion.span className="absolute r..." style={{left:"95.7...", ...}} animate={{y:[...], ...}} ...>
+    66→                              <span
+    67→                                className="absolute rounded-full"
+    68→                                style={{
+    69→+                                 left: "95.78513530421421%"
+    70→-                                 left: "23.8914%"
+    71→+                                 top: "25.655853524956175%"
+    72→-                                 top: "71.3863%"
+    73→+                                 width: 3.368280247502102
+    74→-                                 width: "1.3266px"
+    75→+                                 height: 3.368280247502102
+    76→-                                 height: "1.3266px"
+    77→+                                 background: "#e8e0d0"
+    78→+                                 opacity: 0.5
+    79→-                                 opacity: "0.5"
+    80→+                                 boxShadow: "0 0 10.104840742506305px #e8e0d0"
+    81→-                                 background-image: "initial"
+    82→-                                 background-position-x: "initial"
+    83→-                                 background-position-y: "initial"
+    84→-                                 background-size: "initial"
+    85→-                                 background-repeat: "initial"
+    86→-                                 background-attachment: "initial"
+    87→-                                 background-origin: "initial"
+    88→-                                 background-clip: "initial"
+    89→-                                 background-color: "rgb(232, 224, 208)"
+    90→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 3.9798px"
+    91→                                }}
+    92→                                ref={function useMotionRef.useCallback}
+    93→                              >
+    94→                            <motion.span className="absolute r..." style={{left:"48.1...", ...}} animate={{y:[...], ...}} ...>
+    95→                              <span
+    96→                                className="absolute rounded-full"
+    97→                                style={{
+    98→+                                 left: "48.16792368320429%"
+    99→-                                 left: "78.0756%"
+   100→+                                 top: "63.33712320677807%"
+   101→-                                 top: "74.8032%"
+   102→+                                 width: 2.0544071555990255
+   103→-                                 width: "3.67358px"
+   104→+                                 height: 2.0544071555990255
+   105→-                                 height: "3.67358px"
+   106→+                                 background: "#e8e0d0"
+   107→+                                 opacity: 0.5
+   108→-                                 opacity: "0.5"
+   109→+                                 boxShadow: "0 0 6.163221466797077px #e8e0d0"
+   110→-                                 background-image: "initial"
+   111→-                                 background-position-x: "initial"
+   112→-                                 background-position-y: "initial"
+   113→-                                 background-size: "initial"
+   114→-                                 background-repeat: "initial"
+   115→-                                 background-attachment: "initial"
+   116→-                                 background-origin: "initial"
+   117→-                                 background-clip: "initial"
+   118→-                                 background-color: "rgb(232, 224, 208)"
+   119→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 11.0207px"
+   120→                                }}
+   121→                                ref={function useMotionRef.useCallback}
+   122→                              >
+   123→                            <motion.span className="absolute r..." style={{left:"41.2...", ...}} animate={{y:[...], ...}} ...>
+   124→                              <span
+   125→                                className="absolute rounded-full"
+   126→                                style={{
+   127→+                                 left: "41.29257460600401%"
+   128→-                                 left: "92.757%"
+   129→+                                 top: "49.39395052948029%"
+   130→-                                 top: "1.89607%"
+   131→+                                 width: 3.3934229159848703
+   132→-                                 width: "1.0781px"
+   133→+                                 height: 3.3934229159848703
+   134→-                                 height: "1.0781px"
+   135→+                                 background: "#e8e0d0"
+   136→+                                 opacity: 0.5
+   137→-                                 opacity: "0.5"
+   138→+                                 boxShadow: "0 0 10.18026874795461px #e8e0d0"
+   139→-                                 background-image: "initial"
+   140→-                                 background-position-x: "initial"
+   141→-                                 background-position-y: "initial"
+   142→-                                 background-size: "initial"
+   143→-                                 background-repeat: "initial"
+   144→-                                 background-attachment: "initial"
+   145→-                                 background-origin: "initial"
+   146→-                                 background-clip: "initial"
+   147→-                                 background-color: "rgb(232, 224, 208)"
+   148→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 3.23431px"
+   149→                                }}
+   150→                                ref={function useMotionRef.useCallback}
+   151→                              >
+   152→                            <motion.span className="absolute r..." style={{left:"73.1...", ...}} animate={{y:[...], ...}} ...>
+   153→                              <span
+   154→                                className="absolute rounded-full"
+   155→                                style={{
+   156→+                                 left: "73.10947895622742%"
+   157→-                                 left: "33.3906%"
+   158→+                                 top: "6.678067466218862%"
+   159→-                                 top: "15.6353%"
+   160→+                                 width: 3.6092781170119417
+   161→-                                 width: "1.85353px"
+   162→+                                 height: 3.6092781170119417
+   163→-                                 height: "1.85353px"
+   164→+                                 background: "#e8e0d0"
+   165→+                                 opacity: 0.5
+   166→-                                 opacity: "0.5"
+   167→+                                 boxShadow: "0 0 10.827834351035825px #e8e0d0"
+   168→-                                 background-image: "initial"
+   169→-                                 background-position-x: "initial"
+   170→-                                 background-position-y: "initial"
+   171→-                                 background-size: "initial"
+   172→-                                 background-repeat: "initial"
+   173→-                                 background-attachment: "initial"
+   174→-                                 background-origin: "initial"
+   175→-                                 background-clip: "initial"
+   176→-                                 background-color: "rgb(232, 224, 208)"
+   177→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 5.56058px"
+   178→                                }}
+   179→                                ref={function useMotionRef.useCallback}
+   180→                              >
+   181→                            <motion.span className="absolute r..." style={{left:"70.0...", ...}} animate={{y:[...], ...}} ...>
+   182→                              <span
+   183→                                className="absolute rounded-full"
+   184→                                style={{
+   185→+                                 left: "70.06924353228915%"
+   186→-                                 left: "96.0202%"
+   187→+                                 top: "22.46939437339208%"
+   188→-                                 top: "87.5634%"
+   189→+                                 width: 3.1798534768135003
+   190→-                                 width: "2.57851px"
+   191→+                                 height: 3.1798534768135003
+   192→-                                 height: "2.57851px"
+   193→+                                 background: "#e8e0d0"
+   194→+                                 opacity: 0.5
+   195→-                                 opacity: "0.5"
+   196→+                                 boxShadow: "0 0 9.5395604304405px #e8e0d0"
+   197→-                                 background-image: "initial"
+   198→-                                 background-position-x: "initial"
+   199→-                                 background-position-y: "initial"
+   200→-                                 background-size: "initial"
+   201→-                                 background-repeat: "initial"
+   202→-                                 background-attachment: "initial"
+   203→-                                 background-origin: "initial"
+   204→-                                 background-clip: "initial"
+   205→-                                 background-color: "rgb(232, 224, 208)"
+   206→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 7.73553px"
+   207→                                }}
+   208→                                ref={function useMotionRef.useCallback}
+   209→                              >
+   210→                            <motion.span className="absolute r..." style={{left:"74.1...", ...}} animate={{y:[...], ...}} ...>
+   211→                              <span
+   212→                                className="absolute rounded-full"
+   213→                                style={{
+   214→+                                 left: "74.10719350320994%"
+   215→-                                 left: "34.1208%"
+   216→+                                 top: "35.029491618819094%"
+   217→-                                 top: "68.3554%"
+   218→+                                 width: 3.835166273047548
+   219→-                                 width: "3.34977px"
+   220→+                                 height: 3.835166273047548
+   221→-                                 height: "3.34977px"
+   222→+                                 background: "#e8e0d0"
+   223→+                                 opacity: 0.5
+   224→-                                 opacity: "0.5"
+   225→+                                 boxShadow: "0 0 11.505498819142645px #e8e0d0"
+   226→-                                 background-image: "initial"
+   227→-                                 background-position-x: "initial"
+   228→-                                 background-position-y: "initial"
+   229→-                                 background-size: "initial"
+   230→-                                 background-repeat: "initial"
+   231→-                                 background-attachment: "initial"
+   232→-                                 background-origin: "initial"
+   233→-                                 background-clip: "initial"
+   234→-                                 background-color: "rgb(232, 224, 208)"
+   235→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 10.0493px"
+   236→                                }}
+   237→                                ref={function useMotionRef.useCallback}
+   238→                              >
+   239→                            <motion.span className="absolute r..." style={{left:"70.6...", ...}} animate={{y:[...], ...}} ...>
+   240→                              <span
+   241→                                className="absolute rounded-full"
+   242→                                style={{
+   243→+                                 left: "70.62746368727181%"
+   244→-                                 left: "14.513%"
+   245→+                                 top: "16.151948106556414%"
+   246→-                                 top: "16.1331%"
+   247→+                                 width: 1.0422630672107072
+   248→-                                 width: "3.91886px"
+   249→+                                 height: 1.0422630672107072
+   250→-                                 height: "3.91886px"
+   251→+                                 background: "#e8e0d0"
+   252→+                                 opacity: 0.5
+   253→-                                 opacity: "0.5"
+   254→+                                 boxShadow: "0 0 3.1267892016321213px #e8e0d0"
+   255→-                                 background-image: "initial"
+   256→-                                 background-position-x: "initial"
+   257→-                                 background-position-y: "initial"
+   258→-                                 background-size: "initial"
+   259→-                                 background-repeat: "initial"
+   260→-                                 background-attachment: "initial"
+   261→-                                 background-origin: "initial"
+   262→-                                 background-clip: "initial"
+   263→-                                 background-color: "rgb(232, 224, 208)"
+   264→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 11.7566px"
+   265→                                }}
+   266→                                ref={function useMotionRef.useCallback}
+   267→                              >
+   268→                            <motion.span className="absolute r..." style={{left:"3.70...", ...}} animate={{y:[...], ...}} ...>
+   269→                              <span
+   270→                                className="absolute rounded-full"
+   271→                                style={{
+   272→+                                 left: "3.7003019768548473%"
+   273→-                                 left: "44.0478%"
+   274→+                                 top: "12.082869486185855%"
+   275→-                                 top: "14.3055%"
+   276→+                                 width: 1.7657741410907604
+   277→-                                 width: "2.76371px"
+   278→+                                 height: 1.7657741410907604
+   279→-                                 height: "2.76371px"
+   280→+                                 background: "#e8e0d0"
+   281→+                                 opacity: 0.5
+   282→-                                 opacity: "0.5"
+   283→+                                 boxShadow: "0 0 5.297322423272281px #e8e0d0"
+   284→-                                 background-image: "initial"
+   285→-                                 background-position-x: "initial"
+   286→-                                 background-position-y: "initial"
+   287→-                                 background-size: "initial"
+   288→-                                 background-repeat: "initial"
+   289→-                                 background-attachment: "initial"
+   290→-                                 background-origin: "initial"
+   291→-                                 background-clip: "initial"
+   292→-                                 background-color: "rgb(232, 224, 208)"
+   293→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 8.29112px"
+   294→                                }}
+   295→                                ref={function useMotionRef.useCallback}
+   296→                              >
+   297→                            <motion.span className="absolute r..." style={{left:"74.1...", ...}} animate={{y:[...], ...}} ...>
+   298→                              <span
+   299→                                className="absolute rounded-full"
+   300→                                style={{
+   301→+                                 left: "74.15592844636922%"
+   302→-                                 left: "36.6767%"
+   303→+                                 top: "63.74015251610218%"
+   304→-                                 top: "81.3396%"
+   305→+                                 width: 1.007252474949413
+   306→-                                 width: "1.2771px"
+   307→+                                 height: 1.007252474949413
+   308→-                                 height: "1.2771px"
+   309→+                                 background: "#e8e0d0"
+   310→+                                 opacity: 0.5
+   311→-                                 opacity: "0.5"
+   312→+                                 boxShadow: "0 0 3.021757424848239px #e8e0d0"
+   313→-                                 background-image: "initial"
+   314→-                                 background-position-x: "initial"
+   315→-                                 background-position-y: "initial"
+   316→-                                 background-size: "initial"
+   317→-                                 background-repeat: "initial"
+   318→-                                 background-attachment: "initial"
+   319→-                                 background-origin: "initial"
+   320→-                                 background-clip: "initial"
+   321→-                                 background-color: "rgb(232, 224, 208)"
+   322→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 3.8313px"
+   323→                                }}
+   324→                                ref={function useMotionRef.useCallback}
+   325→                              >
+   326→                            <motion.span className="absolute r..." style={{left:"26.1...", ...}} animate={{y:[...], ...}} ...>
+   327→                              <span
+   328→                                className="absolute rounded-full"
+   329→                                style={{
+   330→+                                 left: "26.15628281445943%"
+   331→-                                 left: "11.3264%"
+   332→+                                 top: "76.37377630284963%"
+   333→-                                 top: "40.376%"
+   334→+                                 width: 1.107729401165896
+   335→-                                 width: "1.62704px"
+   336→+                                 height: 1.107729401165896
+   337→-                                 height: "1.62704px"
+   338→+                                 background: "#e8e0d0"
+   339→+                                 opacity: 0.5
+   340→-                                 opacity: "0.5"
+   341→+                                 boxShadow: "0 0 3.323188203497688px #e8e0d0"
+   342→-                                 background-image: "initial"
+   343→-                                 background-position-x: "initial"
+   344→-                                 background-position-y: "initial"
+   345→-                                 background-size: "initial"
+   346→-                                 background-repeat: "initial"
+   347→-                                 background-attachment: "initial"
+   348→-                                 background-origin: "initial"
+   349→-                                 background-clip: "initial"
+   350→-                                 background-color: "rgb(232, 224, 208)"
+   351→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 4.88113px"
+   352→                                }}
+   353→                                ref={function useMotionRef.useCallback}
+   354→                              >
+   355→                            <motion.span className="absolute r..." style={{left:"46.1...", ...}} animate={{y:[...], ...}} ...>
+   356→                              <span
+   357→                                className="absolute rounded-full"
+   358→                                style={{
+   359→+                                 left: "46.13543998280654%"
+   360→-                                 left: "23.5523%"
+   361→+                                 top: "92.6328501200266%"
+   362→-                                 top: "89.866%"
+   363→+                                 width: 1.3351132116159456
+   364→-                                 width: "2.37341px"
+   365→+                                 height: 1.3351132116159456
+   366→-                                 height: "2.37341px"
+   367→+                                 background: "#e8e0d0"
+   368→+                                 opacity: 0.5
+   369→-                                 opacity: "0.5"
+   370→+                                 boxShadow: "0 0 4.005339634847837px #e8e0d0"
+   371→-                                 background-image: "initial"
+   372→-                                 background-position-x: "initial"
+   373→-                                 background-position-y: "initial"
+   374→-                                 background-size: "initial"
+   375→-                                 background-repeat: "initial"
+   376→-                                 background-attachment: "initial"
+   377→-                                 background-origin: "initial"
+   378→-                                 background-clip: "initial"
+   379→-                                 background-color: "rgb(232, 224, 208)"
+   380→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 7.12022px"
+   381→                                }}
+   382→                                ref={function useMotionRef.useCallback}
+   383→                              >
+   384→                            <motion.span className="absolute r..." style={{left:"67.2...", ...}} animate={{y:[...], ...}} ...>
+   385→                              <span
+   386→                                className="absolute rounded-full"
+   387→                                style={{
+   388→+                                 left: "67.26022412591801%"
+   389→-                                 left: "72.1557%"
+   390→+                                 top: "83.55326943252776%"
+   391→-                                 top: "97.5078%"
+   392→+                                 width: 3.0537262325261207
+   393→-                                 width: "2.93852px"
+   394→+                                 height: 3.0537262325261207
+   395→-                                 height: "2.93852px"
+   396→+                                 background: "#e8e0d0"
+   397→+                                 opacity: 0.5
+   398→-                                 opacity: "0.5"
+   399→+                                 boxShadow: "0 0 9.161178697578363px #e8e0d0"
+   400→-                                 background-image: "initial"
+   401→-                                 background-position-x: "initial"
+   402→-                                 background-position-y: "initial"
+   403→-                                 background-size: "initial"
+   404→-                                 background-repeat: "initial"
+   405→-                                 background-attachment: "initial"
+   406→-                                 background-origin: "initial"
+   407→-                                 background-clip: "initial"
+   408→-                                 background-color: "rgb(232, 224, 208)"
+   409→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 8.81557px"
+   410→                                }}
+   411→                                ref={function useMotionRef.useCallback}
+   412→                              >
+   413→                            <motion.span className="absolute r..." style={{left:"11.9...", ...}} animate={{y:[...], ...}} ...>
+   414→                              <span
+   415→                                className="absolute rounded-full"
+   416→                                style={{
+   417→+                                 left: "11.956595722986718%"
+   418→-                                 left: "66.729%"
+   419→+                                 top: "87.05606589395646%"
+   420→-                                 top: "99.0011%"
+   421→+                                 width: 3.3702512600334527
+   422→-                                 width: "2.37654px"
+   423→+                                 height: 3.3702512600334527
+   424→-                                 height: "2.37654px"
+   425→+                                 background: "#e8e0d0"
+   426→+                                 opacity: 0.5
+   427→-                                 opacity: "0.5"
+   428→+                                 boxShadow: "0 0 10.110753780100358px #e8e0d0"
+   429→-                                 background-image: "initial"
+   430→-                                 background-position-x: "initial"
+   431→-                                 background-position-y: "initial"
+   432→-                                 background-size: "initial"
+   433→-                                 background-repeat: "initial"
+   434→-                                 background-attachment: "initial"
+   435→-                                 background-origin: "initial"
+   436→-                                 background-clip: "initial"
+   437→-                                 background-color: "rgb(232, 224, 208)"
+   438→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 7.12961px"
+   439→                                }}
+   440→                                ref={function useMotionRef.useCallback}
+   441→                              >
+   442→                            <motion.span className="absolute r..." style={{left:"61.2...", ...}} animate={{y:[...], ...}} ...>
+   443→                              <span
+   444→                                className="absolute rounded-full"
+   445→                                style={{
+   446→+                                 left: "61.29176411822178%"
+   447→-                                 left: "23.7682%"
+   448→+                                 top: "2.375843325801219%"
+   449→-                                 top: "36.8617%"
+   450→+                                 width: 2.9375359697072074
+   451→-                                 width: "1.31224px"
+   452→+                                 height: 2.9375359697072074
+   453→-                                 height: "1.31224px"
+   454→+                                 background: "#e8e0d0"
+   455→+                                 opacity: 0.5
+   456→-                                 opacity: "0.5"
+   457→+                                 boxShadow: "0 0 8.812607909121622px #e8e0d0"
+   458→-                                 background-image: "initial"
+   459→-                                 background-position-x: "initial"
+   460→-                                 background-position-y: "initial"
+   461→-                                 background-size: "initial"
+   462→-                                 background-repeat: "initial"
+   463→-                                 background-attachment: "initial"
+   464→-                                 background-origin: "initial"
+   465→-                                 background-clip: "initial"
+   466→-                                 background-color: "rgb(232, 224, 208)"
+   467→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 3.93671px"
+   468→                                }}
+   469→                                ref={function useMotionRef.useCallback}
+   470→                              >
+   471→                            <motion.span className="absolute r..." style={{left:"98.7...", ...}} animate={{y:[...], ...}} ...>
+   472→                              <span
+   473→                                className="absolute rounded-full"
+   474→                                style={{
+   475→+                                 left: "98.79878112876668%"
+   476→-                                 left: "56.6405%"
+   477→+                                 top: "74.8271682401726%"
+   478→-                                 top: "79.3486%"
+   479→+                                 width: 1.8853279396353355
+   480→-                                 width: "3.97818px"
+   481→+                                 height: 1.8853279396353355
+   482→-                                 height: "3.97818px"
+   483→+                                 background: "#e8e0d0"
+   484→+                                 opacity: 0.5
+   485→-                                 opacity: "0.5"
+   486→+                                 boxShadow: "0 0 5.655983818906007px #e8e0d0"
+   487→-                                 background-image: "initial"
+   488→-                                 background-position-x: "initial"
+   489→-                                 background-position-y: "initial"
+   490→-                                 background-size: "initial"
+   491→-                                 background-repeat: "initial"
+   492→-                                 background-attachment: "initial"
+   493→-                                 background-origin: "initial"
+   494→-                                 background-clip: "initial"
+   495→-                                 background-color: "rgb(232, 224, 208)"
+   496→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 11.9345px"
+   497→                                }}
+   498→                                ref={function useMotionRef.useCallback}
+   499→                              >
+   500→                            <motion.span className="absolute r..." style={{left:"62.2...", ...}} animate={{y:[...], ...}} ...>
+   501→                              <span
+   502→                                className="absolute rounded-full"
+   503→                                style={{
+   504→+                                 left: "62.292291513540675%"
+   505→-                                 left: "96.2458%"
+   506→+                                 top: "4.1520792869265355%"
+   507→-                                 top: "70.137%"
+   508→+                                 width: 1.5851777384897683
+   509→-                                 width: "1.34158px"
+   510→+                                 height: 1.5851777384897683
+   511→-                                 height: "1.34158px"
+   512→+                                 background: "#e8e0d0"
+   513→+                                 opacity: 0.5
+   514→-                                 opacity: "0.5"
+   515→+                                 boxShadow: "0 0 4.755533215469304px #e8e0d0"
+   516→-                                 background-image: "initial"
+   517→-                                 background-position-x: "initial"
+   518→-                                 background-position-y: "initial"
+   519→-                                 background-size: "initial"
+   520→-                                 background-repeat: "initial"
+   521→-                                 background-attachment: "initial"
+   522→-                                 background-origin: "initial"
+   523→-                                 background-clip: "initial"
+   524→-                                 background-color: "rgb(232, 224, 208)"
+   525→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 4.02474px"
+   526→                                }}
+   527→                                ref={function useMotionRef.useCallback}
+   528→                              >
+   529→                            <motion.span className="absolute r..." style={{left:"89.0...", ...}} animate={{y:[...], ...}} ...>
+   530→                              <span
+   531→                                className="absolute rounded-full"
+   532→                                style={{
+   533→+                                 left: "89.06964648886422%"
+   534→-                                 left: "19.4672%"
+   535→+                                 top: "25.435490902439074%"
+   536→-                                 top: "57.3997%"
+   537→+                                 width: 3.568557148710199
+   538→-                                 width: "2.7557px"
+   539→+                                 height: 3.568557148710199
+   540→-                                 height: "2.7557px"
+   541→+                                 background: "#e8e0d0"
+   542→+                                 opacity: 0.5
+   543→-                                 opacity: "0.5"
+   544→+                                 boxShadow: "0 0 10.705671446130598px #e8e0d0"
+   545→-                                 background-image: "initial"
+   546→-                                 background-position-x: "initial"
+   547→-                                 background-position-y: "initial"
+   548→-                                 background-size: "initial"
+   549→-                                 background-repeat: "initial"
+   550→-                                 background-attachment: "initial"
+   551→-                                 background-origin: "initial"
+   552→-                                 background-clip: "initial"
+   553→-                                 background-color: "rgb(232, 224, 208)"
+   554→-                                 box-shadow: "rgb(232, 224, 208) 0px 0px 8.26709px"
+   555→                                }}
+   556→                                ref={function useMotionRef.useCallback}
+   557→                              >
+   558→                        ...
+   559→            ...
+   560→          ...
+   561→    ...
+   562→
+   563→
+   564→
+   565→    at span (<anonymous>:null:null)
+   566→    at Home (src/app/page.tsx:22:9)
+   567→
+   568→## Code Frame
+   569→  20 |         <HeroLab />
+   570→  21 |         <SystemsOverview />
+   571→> 22 |         <MicroscopeJourney />
+   572→     |         ^
+   573→  23 |         <Capabilities />
+   574→  24 |         <DiseaseLibrary />
+   575→  25 |         <EducationModes />
+   576→
+   577→Next.js version: 16.1.3 (Turbopack)
+   578→

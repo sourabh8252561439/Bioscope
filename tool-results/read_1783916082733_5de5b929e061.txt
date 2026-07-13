@@ -1,0 +1,2002 @@
+     1→/**
+     2→ * anatomy-data.ts
+     3→ * --------------------------------------------------------------------------
+     4→ * Knowledge backbone for the 3D Human Anatomy Platform.
+     5→ *
+     6→ * All content is medically reviewed for educational accuracy at a
+     7→ * pre-clinical / undergraduate medical-school level. It is intended for
+     8→ * learning and reference only and is NOT a substitute for professional
+     9→ * medical advice.
+    10→ *
+    11→ * Pure data module — no React, no runtime imports beyond TypeScript types.
+    12→ * --------------------------------------------------------------------------
+    13→ */
+    14→
+    15→// ============================================================================
+    16→// CORE INTERFACES
+    17→// ============================================================================
+    18→
+    19→export interface Organ {
+    20→  id: string;
+    21→  name: string;
+    22→  latinName: string;
+    23→  weight?: string;
+    24→  overview: string;
+    25→  location: string;
+    26→  function: string;
+    27→  bloodSupply: string;
+    28→  nerveSupply: string;
+    29→  clinicalImportance: string;
+    30→  commonDiseases: string[];
+    31→}
+    32→
+    33→export interface BodySystem {
+    34→  id: string;
+    35→  name: string;
+    36→  latinName: string;
+    37→  icon: string;
+    38→  color: string;
+    39→  tagline: string;
+    40→  description: string;
+    41→  organs: Organ[];
+    42→  funFact: string;
+    43→  stats: { label: string; value: string }[];
+    44→}
+    45→
+    46→export interface Disease {
+    47→  id: string;
+    48→  name: string;
+    49→  systemId: string;
+    50→  cause: string;
+    51→  symptoms: string[];
+    52→  diagnosis: string;
+    53→  treatment: string;
+    54→  prognosis: string;
+    55→}
+    56→
+    57→export interface MicroscopeLevel {
+    58→  id: string;
+    59→  name: string;
+    60→  scale: string;
+    61→  description: string;
+    62→  color: string;
+    63→}
+    64→
+    65→export interface EducationMode {
+    66→  id: string;
+    67→  name: string;
+    68→  icon: string;
+    69→  description: string;
+    70→  difficulty: "Beginner" | "Intermediate" | "Advanced";
+    71→}
+    72→
+    73→export interface ViewportMode {
+    74→  id: string;
+    75→  name: string;
+    76→  icon: string;
+    77→  description: string;
+    78→}
+    79→
+    80→export interface QuizQuestion {
+    81→  id: string;
+    82→  question: string;
+    83→  options: string[];
+    84→  correctIndex: number;
+    85→  explanation: string;
+    86→}
+    87→
+    88→// ============================================================================
+    89→// BODY SYSTEMS
+    90→// ============================================================================
+    91→
+    92→export const bodySystems: BodySystem[] = [
+    93→  // --------------------------------------------------------------------------
+    94→  {
+    95→    id: "skeletal",
+    96→    name: "Skeletal System",
+    97→    latinName: "Systema Skeletale",
+    98→    icon: "Bone",
+    99→    color: "#e8e0d0",
+   100→    tagline: "The living scaffold that carries us through life.",
+   101→    description:
+   102→      "The skeletal system forms the rigid internal framework of the human body, composed of 206 bones at adulthood along with cartilage, ligaments, and joints. Beyond mechanical support, it protects vital organs, anchors muscles for movement, stores minerals, and houses the red bone marrow where blood cells are produced.",
+   103→    funFact:
+   104→      "Babies are born with about 270 cartilaginous bones that fuse into 206 — and the smallest, the stapes in the middle ear, is barely 3 mm long.",
+   105→    stats: [
+   106→      { label: "Bones", value: "206" },
+   107→      { label: "Joints", value: "360+" },
+   108→      { label: "% Body Weight", value: "~15%" },
+   109→      { label: "New Bone / Year", value: "~10%" },
+   110→    ],
+   111→    organs: [
+   112→      {
+   113→        id: "skull",
+   114→        name: "Skull",
+   115→        latinName: "Cranium",
+   116→        weight: "~700 g",
+   117→        overview:
+   118→          "The skull is the bony skeleton of the head, formed by 22 bones divided into the neurocranium (which encases the brain) and the viscerocranium (which forms the face). Most bones are joined by immovable fibrous joints called sutures.",
+   119→        location:
+   120→          "Superior portion of the axial skeleton, resting on the vertebral column at the atlanto-occipital joint.",
+   121→        function:
+   122→          "Protects the brain and special sense organs, provides attachment for muscles of mastication and facial expression, and forms the upper airway and oral cavity.",
+   123→        bloodSupply:
+   124→          "Supplied by branches of the external carotid (middle meningeal, maxillary) and internal carotid (ophthalmic) arteries.",
+   125→        nerveSupply:
+   126→          "Innervated by the trigeminal (V), facial (VII), glossopharyngeal (IX), and vagus (X) nerves.",
+   127→        clinicalImportance:
+   128→          "Skull fractures risk epidural hematomas via middle meningeal artery tears and can compress cranial nerves at foraminal exits.",
+   129→        commonDiseases: [
+   130→          "Skull Fracture",
+   131→          "Craniosynostosis",
+   132→          "Osteomyelitis",
+   133→          "Basilar Invagination",
+   134→        ],
+   135→      },
+   136→      {
+   137→        id: "vertebral-column",
+   138→        name: "Vertebral Column",
+   139→        latinName: "Columna Vertebralis",
+   140→        weight: "~2 kg",
+   141→        overview:
+   142→          "A flexible column of 33 vertebrae — 7 cervical, 12 thoracic, 5 lumbar, 5 sacral (fused), and 4 coccygeal (fused) — separated by fibrocartilaginous intervertebral discs.",
+   143→        location: "Central axis of the body, extending from the skull to the coccyx.",
+   144→        function:
+   145→          "Protects the spinal cord, supports the head and trunk, transmits weight to the pelvis, and provides flexible attachment points for ribs and muscles.",
+   146→        bloodSupply:
+   147→          "Segmental supply from vertebral, ascending cervical, intercostal, and lumbar arteries via segmental medullary and radicular branches.",
+   148→        nerveSupply:
+   149→          "Recurrent meningeal nerves (sinuvertebral nerves) from spinal nerves supply the discs, ligaments, and meninges.",
+   150→        clinicalImportance:
+   151→          "Disc herniation typically posterolaterally compresses the exiting nerve root below the affected level, causing radiculopathy.",
+   152→        commonDiseases: [
+   153→          "Herniated Disc",
+   154→          "Scoliosis",
+   155→          "Spinal Stenosis",
+   156→          "Vertebral Compression Fracture",
+   157→        ],
+   158→      },
+   159→      {
+   160→        id: "rib-cage",
+   161→        name: "Rib Cage",
+   162→        latinName: "Cavea Thoracis",
+   163→        overview:
+   164→          "A bony cartilaginous cage formed by 12 pairs of ribs, the sternum, and thoracic vertebrae. Ribs 1–7 are true, 8–10 false, and 11–12 floating.",
+   165→        location: "Anterior thorax, extending from T1 to T12 vertebrae.",
+   166→        function:
+   167→          "Protects the heart, lungs, and great vessels while expanding during respiration to drive ventilation.",
+   168→        bloodSupply:
+   169→          "Supplied by the intercostal arteries (posterior from aorta, anterior from internal thoracic) and subclavian branches.",
+   170→        nerveSupply:
+   171→          "Intercostal nerves (T1–T11) and subcostal nerve (T12) provide segmental innervation.",
+   172→        clinicalImportance:
+   173→          "Flail chest — three or more segmental fractures in adjacent ribs — causes paradoxical chest wall motion and respiratory failure.",
+   174→        commonDiseases: [
+   175→          "Rib Fracture",
+   176→          "Flail Chest",
+   177→          "Costochondritis",
+   178→          "Pectus Excavatum",
+   179→        ],
+   180→      },
+   181→      {
+   182→        id: "femur",
+   183→        name: "Femur",
+   184→        latinName: "Os Femoris",
+   185→        weight: "~290 g (paired)",
+   186→        overview:
+   187→          "The longest, heaviest, and strongest bone in the human body, the femur forms the skeleton of the thigh and articulates with the acetabulum at the hip and the tibia at the knee.",
+   188→        location: "Thigh, between the hip joint and knee joint.",
+   189→        function:
+   190→          "Bears the entire weight of the body during standing and gait, provides attachment for powerful locomotor muscles, and stores marrow.",
+   191→        bloodSupply:
+   192→          "Crucially dependent on the medial and lateral circumflex femoral arteries and the artery of the ligamentum teres for the femoral head.",
+   193→        nerveSupply:
+   194→          "Nerves to the surrounding thigh compartments: femoral, obturator, and sciatic nerves.",
+   195→        clinicalImportance:
+   196→          "Femoral neck fractures in the elderly risk avascular necrosis of the head due to disruption of the circumflex blood supply.",
+   197→        commonDiseases: [
+   198→          "Femoral Neck Fracture",
+   199→          "Avascular Necrosis",
+   200→          "Femoral Stress Fracture",
+   201→          "Osteosarcoma",
+   202→        ],
+   203→      },
+   204→      {
+   205→        id: "pelvis",
+   206→        name: "Pelvis",
+   207→        latinName: "Pelvis",
+   208→        weight: "~1.5 kg",
+   209→        overview:
+   210→          "A basin-shaped ring formed by the two hip bones (ilium, ischium, pubis), the sacrum, and the coccyx. It transfers weight from the spine to the lower limbs and supports the pelvic viscera.",
+   211→        location: "Inferior trunk, between the abdomen and lower limbs.",
+   212→        function:
+   213→          "Transmits body weight to the lower limbs, protects pelvic organs, anchors pelvic floor muscles, and forms the birth canal in females.",
+   214→        bloodSupply:
+   215→          "Internal iliac, external iliac, ovarian/testicular, and median sacral arteries.",
+   216→        nerveSupply:
+   217→          "Lumbosacral plexus (L1–S4) including obturator, sciatic, pudendal, and sacral nerves.",
+   218→        clinicalImportance:
+   219→          "Pelvic fractures can cause life-threatening hemorrhage from the rich presacral venous plexus and internal iliac branches.",
+   220→        commonDiseases: [
+   221→          "Pelvic Fracture",
+   222→          "Hip Osteoarthritis",
+   223→          "Pelvic Floor Dysfunction",
+   224→          "Sacral Insufficiency Fracture",
+   225→        ],
+   226→      },
+   227→      {
+   228→        id: "humerus",
+   229→        name: "Humerus",
+   230→        latinName: "Humerus",
+   231→        overview:
+   232→          "The single long bone of the arm, articulating proximally with the scapula at the glenohumeral joint and distally with the radius and ulna at the elbow.",
+   233→        location: "Arm, between shoulder and elbow.",
+   234→        function:
+   235→          "Acts as a lever for upper limb movement, transmits forces between shoulder and forearm, and anchors major arm muscles.",
+   236→        bloodSupply:
+   237→          "Profunda brachii (artery of the arm), plus circumflex humeral and brachial arterial branches.",
+   238→        nerveSupply:
+   239→          "Musculocutaneous, radial, median, and ulnar nerves lie in close proximity, especially around the spiral groove.",
+   240→        clinicalImportance:
+   241→          "Midshaft fractures commonly injure the radial nerve in the spiral groove, causing wrist drop.",
+   242→        commonDiseases: [
+   243→          "Humeral Shaft Fracture",
+   244→          "Radial Nerve Palsy",
+   245→          "Proximal Humeral Fracture",
+   246→          "Supracondylar Fracture",
+   247→        ],
+   248→      },
+   249→      {
+   250→        id: "sternum",
+   251→        name: "Sternum",
+   252→        latinName: "Sternum",
+   253→        weight: "~70 g",
+   254→        overview:
+   255→          "A flat elongated bone in the anterior chest wall divided into the manubrium, body, and xiphoid process. It is a primary site for cardiopulmonary resuscitation and bone marrow biopsy.",
+   256→        location: "Anterior midline of the thorax, articulating with clavicles and ribs 1–7.",
+   257→        function:
+   258→          "Forms the anterior anchor of the rib cage and protects mediastinal structures including the heart.",
+   259→        bloodSupply:
+   260→          "Internal thoracic arteries via perforating branches and the pericardiophrenic artery.",
+   261→        nerveSupply:
+   262→          "Anterior intercostal nerves from T1–T7.",
+   263→        clinicalImportance:
+   264→          "Sternal fractures from blunt trauma indicate high-energy injury and are associated with cardiac and pulmonary contusions.",
+   265→        commonDiseases: [
+   266→          "Sternal Fracture",
+   267→          "Pectus Carinatum",
+   268→          "Sternal Osteomyelitis",
+   269→          "Sternal Non-Union",
+   270→        ],
+   271→      },
+   272→      {
+   273→        id: "clavicle",
+   274→        name: "Clavicle",
+   275→        latinName: "Clavicula",
+   276→        overview:
+   277→          "The only long bone to lie horizontally, the S-shaped clavicle connects the upper limb to the trunk and is the most commonly fractured bone in the body.",
+   278→        location: "Between the sternum (medially) and the acromion of the scapula (laterally).",
+   279→        function:
+   280→          "Braces the shoulder, transmits forces from the upper limb to the axial skeleton, and serves as a muscle attachment site.",
+   281→        bloodSupply:
+   282→          "Branches of the suprascapular, thoracoacromial, and internal thoracic arteries.",
+   283→        nerveSupply:
+   284→          "Supraclavicular nerves (C3–C4) for sensation; no muscles attach solely to it.",
+   285→        clinicalImportance:
+   286→          "Midshaft fractures are most common and present with a drooped shoulder and palpable deformity.",
+   287→        commonDiseases: [
+   288→          "Clavicle Fracture",
+   289→          "Acromioclavicular Separation",
+   290→          "Sternoclavicular Dislocation",
+   291→          "Clavicular Osteomyelitis",
+   292→        ],
+   293→      },
+   294→    ],
+   295→  },
+   296→
+   297→  // --------------------------------------------------------------------------
+   298→  {
+   299→    id: "muscular",
+   300→    name: "Muscular System",
+   301→    latinName: "Systema Musculare",
+   302→    icon: "Dumbbell",
+   303→    color: "#c0392b",
+   304→    tagline: "Over 600 muscles turn thought into motion.",
+   305→    description:
+   306→      "The muscular system comprises more than 600 skeletal muscles that produce movement, maintain posture, generate heat, and stabilize joints. Each muscle is a bundled organ of contractile fibers under voluntary or involuntary control.",
+   307→    funFact:
+   308→      "The masseter is the strongest muscle by force generated on a surface area basis — your bite can exert up to 90 kg of force.",
+   309→    stats: [
+   310→      { label: "Muscles", value: "600+" },
+   311→      { label: "% Body Mass", value: "~40%" },
+   312→      { label: "Strongest (force)", value: "Masseter" },
+   313→      { label: "Largest", value: "Gluteus Maximus" },
+   314→    ],
+   315→    organs: [
+   316→      {
+   317→        id: "deltoid",
+   318→        name: "Deltoid",
+   319→        latinName: "Musculus Deltoideus",
+   320→        weight: "~200 g",
+   321→        overview:
+   322→          "A thick, triangular muscle covering the shoulder that gives it its rounded contour. It has three distinct heads — anterior, middle, and posterior — each contributing to different movements of the arm.",
+   323→        location: "Lateral aspect of the shoulder, draping the glenohumeral joint.",
+   324→        function:
+   325→          "Anterior head flexes and medially rotates the arm; middle head abducts; posterior head extends and laterally rotates the arm.",
+   326→        bloodSupply:
+   327→          "Posterior circumflex humeral artery and deltoid branch of the thoracoacromial artery.",
+   328→        nerveSupply:
+   329→          "Axillary nerve (C5–C6), making it a key clinical landmark for axillary nerve integrity.",
+   330→        clinicalImportance:
+   331→          "Axillary nerve injury after shoulder dislocation causes deltoid paralysis and anesthesia over the 'regimental badge' patch.",
+   332→        commonDiseases: [
+   333→          "Deltoid Strain",
+   334→          "Axillary Nerve Palsy",
+   335→          "Calcific Tendinitis",
+   336→          "Frozen Shoulder",
+   337→        ],
+   338→      },
+   339→      {
+   340→        id: "biceps-brachii",
+   341→        name: "Biceps Brachii",
+   342→        latinName: "Musculus Biceps Brachii",
+   343→        overview:
+   344→          "A two-headed fusiform muscle of the anterior arm. The long head originates at the supraglenoid tubercle and the short head at the coracoid process, converging to insert on the radial tuberosity.",
+   345→        location: "Anterior compartment of the arm.",
+   346→        function:
+   347→          "Flexes the elbow and powerfully supinates the forearm; assists in shoulder flexion and stabilization.",
+   348→        bloodSupply:
+   349→          "Branches of the brachial artery, especially the bicipital and superior ulnar collateral arteries.",
+   350→        nerveSupply:
+   351→          "Musculocutaneous nerve (C5–C6).",
+   352→        clinicalImportance:
+   353→          "Long head rupture produces the classic 'Popeye sign' — a bulging muscle belly retracted distally.",
+   354→        commonDiseases: [
+   355→          "Biceps Tendon Rupture",
+   356→          "Proximal Biceps Tendinitis",
+   357→          "SLAP Tear",
+   358→          "Bicipital Tendinopathy",
+   359→        ],
+   360→      },
+   361→      {
+   362→        id: "pectoralis-major",
+   363→        name: "Pectoralis Major",
+   364→        latinName: "Musculus Pectoralis Major",
+   365→        weight: "~430 g",
+   366→        overview:
+   367→          "A large, fan-shaped chest muscle with clavicular, sternocostal, and abdominal heads that converge on the intertubercular sulcus of the humerus.",
+   368→        location: "Anterior thoracic wall, superficial to pectoralis minor.",
+   369→        function:
+   370→          "Adducts and medially rotates the arm; the clavicular head flexes, and the sternocostal head extends the flexed arm.",
+   371→        bloodSupply:
+   372→          "Pectoral branch of thoracoacromial, internal thoracic perforators, and lateral thoracic arteries.",
+   373→        nerveSupply:
+   374→          "Medial and lateral pectoral nerves (C5–T1).",
+   375→        clinicalImportance:
+   376→          "Pectoralis major rupture occurs in weightlifters during eccentric bench press, requiring surgical repair to restore strength.",
+   377→        commonDiseases: [
+   378→          "Pectoralis Major Rupture",
+   379→          "Poland Syndrome",
+   380→          "Costoclavicular Syndrome",
+   381→          "Pectoralis Strain",
+   382→        ],
+   383→      },
+   384→      {
+   385→        id: "rectus-abdominis",
+   386→        name: "Rectus Abdominis",
+   387→        latinName: "Musculus Rectus Abdominis",
+   388→        overview:
+   389→          "The paired vertical strap muscles of the anterior abdominal wall, segmented by three transverse tendinous intersections giving the 'six-pack' appearance.",
+   390→        location: "Anterior abdominal wall, enclosed in the rectus sheath on either side of the linea alba.",
+   391→        function:
+   392→          "Flexes the trunk, compresses the abdomen to aid in defecation, urination, and forced expiration, and stabilizes the pelvis.",
+   393→        bloodSupply:
+   394→          "Superior epigastric (continuation of internal thoracic) and inferior epigastric (external iliac) arteries.",
+   395→        nerveSupply:
+   396→          "Thoracoabdominal nerves T7–T12, segmentally.",
+   397→        clinicalImportance:
+   398→          "Rectus sheath hematomas can mimic acute abdominal pathology; the linea alba is a common surgical access plane.",
+   399→        commonDiseases: [
+   400→          "Rectus Diastasis",
+   401→          "Rectus Sheath Hematoma",
+   402→          "Abdominal Hernia",
+   403→          "Rectus Strain",
+   404→        ],
+   405→      },
+   406→      {
+   407→        id: "quadriceps",
+   408→        name: "Quadriceps Femoris",
+   409→        latinName: "Musculus Quadriceps Femoris",
+   410→        weight: "~2 kg (paired)",
+   411→        overview:
+   412→          "The four-headed extensor of the knee — vastus medialis, lateralis, intermedius, and rectus femoris — converging into the quadriceps tendon that envelops the patella.",
+   413→        location: "Anterior compartment of the thigh.",
+   414→        function:
+   415→          "Powerful knee extension; the rectus femoris also flexes the hip. Vital for gait, stairs, and rising from sitting.",
+   416→        bloodSupply:
+   417→          "Branches of the femoral and profunda femoris arteries (lateral and medial circumflex femoral).",
+   418→        nerveSupply:
+   419→          "Femoral nerve (L2–L4).",
+   420→        clinicalImportance:
+   421→          "Quadriceps tendon rupture in older adults causes inability to actively extend the knee and requires urgent repair.",
+   422→        commonDiseases: [
+   423→          "Quadriceps Tendon Rupture",
+   424→          "Patellofemoral Pain Syndrome",
+   425→          "Quadriceps Strain",
+   426→          "Myositis Ossificans",
+   427→        ],
+   428→      },
+   429→      {
+   430→        id: "gastrocnemius",
+   431→        name: "Gastrocnemius",
+   432→        latinName: "Musculus Gastrocnemius",
+   433→        overview:
+   434→          "A two-headed superficial calf muscle that, with the soleus, forms the triceps surae. Its tendinous continuation is the Achilles tendon inserting on the calcaneus.",
+   435→        location: "Superficial posterior compartment of the leg.",
+   436→        function:
+   437→          "Plantarflexes the ankle, flexes the knee, and propels gait; the key muscle for push-off during walking and jumping.",
+   438→        bloodSupply:
+   439→          "Medial and lateral sural branches of the popliteal artery.",
+   440→        nerveSupply:
+   441→          "Tibial nerve (S1–S2).",
+   442→        clinicalImportance:
+   443→          "Medial head rupture presents as 'tennis leg' — sudden calf pain mimicking deep vein thrombosis.",
+   444→        commonDiseases: [
+   445→          "Achilles Tendinopathy",
+   446→          "Tennis Leg",
+   447→          "Gastrocnemius Strain",
+   448→          "Achilles Tendon Rupture",
+   449→        ],
+   450→      },
+   451→      {
+   452→        id: "gluteus-maximus",
+   453→        name: "Gluteus Maximus",
+   454→        latinName: "Musculus Gluteus Maximus",
+   455→        weight: "~750 g",
+   456→        overview:
+   457→          "The largest and most superficial of the gluteal muscles, forming the bulk of the buttock and uniquely developed in humans for upright posture.",
+   458→        location: "Posterior gluteal region, superficial to gluteus medius.",
+   459→        function:
+   460→          "Extends and laterally rotates the hip; powerfully extends the trunk from the flexed position during climbing and rising.",
+   461→        bloodSupply:
+   462→          "Superior and inferior gluteal arteries, with the inferior being the dominant supply.",
+   463→        nerveSupply:
+   464→          "Inferior gluteal nerve (L5–S2).",
+   465→        clinicalImportance:
+   466→          "Intramuscular injections target the superolateral quadrant to avoid the sciatic nerve and inferior gluteal vessels.",
+   467→        commonDiseases: [
+   468→          "Gluteal Bursitis",
+   469→          "Piriformis Syndrome",
+   470→          "Hamstring Origin Tendinopathy",
+   471→          "Sacroiliac Dysfunction",
+   472→        ],
+   473→      },
+   474→      {
+   475→        id: "trapezius",
+   476→        name: "Trapezius",
+   477→        latinName: "Musculus Trapezius",
+   478→        overview:
+   479→          "A large, triangular superficial muscle of the upper back with descending, transverse, and ascending parts that together resemble a trapezoid when paired.",
+   480→        location: "Posterior neck and upper thorax, from occipital bone to T12.",
+   481→        function:
+   482→          "Elevates, retracts, and depresses the scapula; rotates the glenoid superiorly and supports the weight of the upper limb.",
+   483→        bloodSupply:
+   484→          "Transverse cervical and dorsal scapular arteries (and occipital branch for the upper fibers).",
+   485→        nerveSupply:
+   486→          "Spinal accessory nerve (CN XI) for motor; C2–C4 for proprioception.",
+   487→        clinicalImportance:
+   488→          "Accessory nerve injury during cervical lymph node biopsy results in shoulder droop and inability to elevate the arm above horizontal.",
+   489→        commonDiseases: [
+   490→          "Trapezius Strain",
+   491→          "Accessory Nerve Palsy",
+   492→          "Myofascial Pain Syndrome",
+   493→          "Thoracic Outlet Syndrome",
+   494→        ],
+   495→      },
+   496→    ],
+   497→  },
+   498→
+   499→  // --------------------------------------------------------------------------
+   500→  {
+   501→    id: "nervous",
+   502→    name: "Nervous System",
+   503→    latinName: "Systema Nervosum",
+   504→    icon: "Brain",
+   505→    color: "#f1c40f",
+   506→    tagline: "The body's command network — electricity made flesh.",
+   507→    description:
+   508→      "The nervous system integrates sensory input, coordinates motor output, and underlies cognition, emotion, and homeostasis. It is divided into the central nervous system (brain and spinal cord) and peripheral nervous system (cranial and spinal nerves).",
+   509→    funFact:
+   510→      "The human brain generates about 20 watts of power — enough to dimly light a bulb — while comprising just 2% of body weight.",
+   511→    stats: [
+   512→      { label: "Neurons", value: "~86 billion" },
+   513→      { label: "Brain Weight", value: "~1.4 kg" },
+   514→      { label: "Nerve Conduction", value: "120 m/s" },
+   515→      { label: "Cranial Nerves", value: "12 pairs" },
+   516→    ],
+   517→    organs: [
+   518→      {
+   519→        id: "cerebrum",
+   520→        name: "Cerebrum",
+   521→        latinName: "Cerebrum",
+   522→        weight: "~1.1 kg",
+   523→        overview:
+   524→          "The largest part of the brain, divided into two hemispheres connected by the corpus callosum and partitioned into four lobes: frontal, parietal, temporal, and occipital.",
+   525→        location: "Supratentorial cranial cavity, occupying most of the cranial vault.",
+   526→        function:
+   527→          "Houses higher cognition, voluntary motor control, sensory perception, language, memory, and emotional processing.",
+   528→        bloodSupply:
+   529→          "Anterior (ACA), middle (MCA), and posterior (PCA) cerebral arteries forming the Circle of Willis.",
+   530→        nerveSupply:
+   531→          "Internally by intrinsic networks of glutamatergic, GABAergic, and modulatory neurons; sensation via the meninges from the trigeminal nerve.",
+   532→        clinicalImportance:
+   533→          "Stroke in MCA territory causes contralateral face and arm weakness with sensory loss and, in the dominant hemisphere, aphasia.",
+   534→        commonDiseases: [
+   535→          "Ischemic Stroke",
+   536→          "Glioblastoma",
+   537→          "Alzheimer Disease",
+   538→          "Epilepsy",
+   539→        ],
+   540→      },
+   541→      {
+   542→        id: "cerebellum",
+   543→        name: "Cerebellum",
+   544→        latinName: "Cerebellum",
+   545→        weight: "~150 g",
+   546→        overview:
+   547→          "A cauliflower-shaped structure dorsal to the pons and medulla, comprising a vermis and two hemispheres. Despite only 10% of brain volume, it contains over half of all neurons.",
+   548→        location: "Posterior cranial fossa, beneath the tentorium cerebelli.",
+   549→        function:
+   550→          "Coordinates voluntary movement, balance, posture, and motor learning by comparing intended with actual movement.",
+   551→        bloodSupply:
+   552→          "Superior, anterior inferior, and posterior inferior cerebellar arteries (SCA, AICA, PICA).",
+   553→        nerveSupply:
+   554→          "Connected via the three cerebellar peduncles; intrinsic Purkinje and granule cell networks.",
+   555→        clinicalImportance:
+   556→          "Cerebellar lesions produce ipsilateral ataxia, dysmetria (past-pointing), intention tremor, and dysarthric speech.",
+   557→        commonDiseases: [
+   558→          "Cerebellar Stroke",
+   559→          "Ataxia",
+   560→          "Medulloblastoma",
+   561→          "Cerebellar Herniation",
+   562→        ],
+   563→      },
+   564→      {
+   565→        id: "brainstem",
+   566→        name: "Brainstem",
+   567→        latinName: "Truncus Encephali",
+   568→        weight: "~70 g",
+   569→        overview:
+   570→          "The stalk-like structure continuous with the spinal cord, comprising the midbrain, pons, and medulla oblongata. It contains nuclei of cranial nerves III–XII.",
+   571→        location: "Central core of the brain between the diencephalon and spinal cord.",
+   572→        function:
+   573→          "Relays signals between cerebrum and spinal cord, controls vital autonomic functions including respiration and cardiovascular tone, and houses cranial nerve nuclei.",
+   574→        bloodSupply:
+   575→          "Vertebral and basilar arteries with their paramedian, short circumferential, and long circumferential branches.",
+   576→        nerveSupply:
+   577→          "Contains nuclei of cranial nerves III–XII and the reticular activating system.",
+   578→        clinicalImportance:
+   579→          "Brainstem stroke is life-threatening; locked-in syndrome follows basilar artery occlusion with preserved consciousness but quadriplegia.",
+   580→        commonDiseases: [
+   581→          "Brainstem Stroke",
+   582→          "Locked-In Syndrome",
+   583→          "Central Herniation",
+   584→          "Pontine Hemorrhage",
+   585→        ],
+   586→      },
+   587→      {
+   588→        id: "spinal-cord",
+   589→        name: "Spinal Cord",
+   590→        latinName: "Medulla Spinalis",
+   591→        weight: "~30 g",
+   592→        overview:
+   593→          "A cylindrical bundle of nervous tissue extending from the medulla at the foramen magnum to the conus medullaris at L1–L2 in adults. It gives rise to 31 pairs of spinal nerves.",
+   594→        location: "Within the vertebral canal, surrounded by the three meningeal layers.",
+   595→        function:
+   596→          "Conveys sensory, motor, and autonomic signals between the brain and body, and mediates spinal reflexes.",
+   597→        bloodSupply:
+   598→          "Anterior spinal artery (anterior 2/3) and paired posterior spinal arteries (posterior 1/3), reinforced by radicular arteries.",
+   599→        nerveSupply:
+   600→          "Organized into dorsal (sensory) and ventral (motor) roots forming 31 spinal nerve pairs.",
+   601→        clinicalImportance:
+   602→          "Anterior spinal artery syndrome causes bilateral motor and pain/temperature loss with preserved dorsal column sensation.",
+   603→        commonDiseases: [
+   604→          "Spinal Cord Injury",
+   605→          "Syringomyelia",
+   606→          "Multiple Sclerosis",
+   607→          "Amyotrophic Lateral Sclerosis",
+   608→        ],
+   609→      },
+   610→      {
+   611→        id: "medulla",
+   612→        name: "Medulla Oblongata",
+   613→        latinName: "Medulla Oblongata",
+   614→        overview:
+   615→          "The most caudal portion of the brainstem, continuous with the spinal cord. It contains vital autonomic centers and decussation of the corticospinal tracts.",
+   616→        location: "Inferior brainstem, just above the foramen magnum.",
+   617→        function:
+   618→          "Controls respiration, heart rate, and blood pressure; relays signals; and houses nuclei of CN IX, X, XI, and XII.",
+   619→        bloodSupply:
+   620→          "Vertebral arteries, anterior spinal artery, and posterior inferior cerebellar artery (PICA).",
+   621→        nerveSupply:
+   622→          "Contains cranial nerve nuclei IX–XII and the nucleus of the solitary tract.",
+   623→        clinicalImportance:
+   624→          "Lateral medullary (Wallenberg) syndrome from PICA occlusion causes ipsilateral facial and contralateral body sensory loss with ataxia.",
+   625→        commonDiseases: [
+   626→          "Wallenberg Syndrome",
+   627→          "Medial Medullary Syndrome",
+   628→          "Respiratory Center Failure",
+   629→          "Arnold-Chiari Malformation",
+   630→        ],
+   631→      },
+   632→      {
+   633→        id: "hypothalamus",
+   634→        name: "Hypothalamus",
+   635→        latinName: "Hypothalamus",
+   636→        weight: "~4 g",
+   637→        overview:
+   638→          "A small but pivotal diencephalic structure forming the floor and walls of the third ventricle. It is the master regulator of homeostasis and the hormonal axis.",
+   639→        location: "Inferior diencephalon, below the thalamus, forming the floor of the third ventricle.",
+   640→        function:
+   641→          "Regulates body temperature, hunger, thirst, sleep–wake cycles, autonomic output, and pituitary hormone release via the hypophyseal portal system.",
+   642→        bloodSupply:
+   643→          "Branches of the anterior cerebral, posterior communicating, and posterior cerebral arteries.",
+   644→        nerveSupply:
+   645→          "Reciprocal connections with the limbic system, brainstem, and autonomic centers; itself controls the pituitary.",
+   646→        clinicalImportance:
+   647→          "Craniopharyngiomas compressing the hypothalamus cause growth failure, diabetes insipidus, and visual field defects.",
+   648→        commonDiseases: [
+   649→          "Craniopharyngioma",
+   650→          "Diabetes Insipidus",
+   651→          "Hypothalamic Hamartoma",
+   652→          "Prader-Willi Syndrome",
+   653→        ],
+   654→      },
+   655→      {
+   656→        id: "optic-nerve",
+   657→        name: "Optic Nerve",
+   658→        latinName: "Nervus Opticus",
+   659→        overview:
+   660→          "The second cranial nerve (CN II), a myelinated sensory tract of approximately 1.2 million retinal ganglion cell axons that is technically part of the central nervous system.",
+   661→        location: "From the retina through the optic canal to the optic chiasm.",
+   662→        function:
+   663→          "Conveys visual information from the retina to the lateral geniculate nucleus and pretectal nuclei.",
+   664→        bloodSupply:
+   665→          "Ophthalmic artery branches: central retinal artery and posterior ciliary arteries.",
+   666→        nerveSupply:
+   667→          "It is itself a CNS tract, ensheathed by meninges and surrounded by cerebrospinal fluid.",
+   668→        clinicalImportance:
+   669→          "Papilledema on fundoscopy reflects raised intracranial pressure transmitted along the subarachnoid sheath.",
+   670→        commonDiseases: [
+   671→          "Optic Neuritis",
+   672→          "Papilledema",
+   673→          "Glaucoma",
+   674→          "Anterior Ischemic Optic Neuropathy",
+   675→        ],
+   676→      },
+   677→      {
+   678→        id: "vagus-nerve",
+   679→        name: "Vagus Nerve",
+   680→        latinName: "Nervus Vagus",
+   681→        overview:
+   682→          "The tenth cranial nerve (CN X), the longest and most widely distributed cranial nerve, providing parasympathetic output to most thoracic and abdominal viscera.",
+   683→        location: "From the medulla through the jugular foramen into the neck, thorax, and abdomen.",
+   684→        function:
+   685→          "Provides parasympathetic supply to the heart, lungs, and gastrointestinal tract; mediates the baroreceptor reflex, swallowing, and phonation.",
+   686→        bloodSupply:
+   687→          "Meningeal, auricular, and nodose ganglion branches from the posterior meningeal, occipital, and ascending pharyngeal arteries.",
+   688→        nerveSupply:
+   689→          "Contains afferent, efferent, and parasympathetic fibers; nuclei in the medulla (nucleus ambiguus, dorsal motor nucleus).",
+   690→        clinicalImportance:
+   691→          "Unilateral vagal injury causes hoarseness from recurrent laryngeal nerve palsy; vagal stimulation is used to treat refractory epilepsy.",
+   692→        commonDiseases: [
+   693→          "Vocal Cord Paralysis",
+   694→          "Gastroparesis",
+   695→          "Vasovagal Syncope",
+   696→          "Vagal Schwannoma",
+   697→        ],
+   698→      },
+   699→    ],
+   700→  },
+   701→
+   702→  // --------------------------------------------------------------------------
+   703→  {
+   704→    id: "cardiovascular",
+   705→    name: "Cardiovascular System",
+   706→    latinName: "Systema Cardiovasculare",
+   707→    icon: "Heart",
+   708→    color: "#e74c3c",
+   709→    tagline: "A pump, a network, and a river of life.",
+   710→    description:
+   711→      "The cardiovascular system comprises the heart, blood, and a vast vascular tree estimated at 100,000 km in length. It delivers oxygen and nutrients to tissues, removes waste, and transports hormones, immune cells, and heat throughout the body.",
+   712→    funFact:
+   713→      "Your heart beats around 100,000 times per day, pumping roughly 7,500 liters of blood — enough to fill about 40 bathtubs daily.",
+   714→    stats: [
+   715→      { label: "Heart Rate", value: "60–100 bpm" },
+   716→      { label: "Blood Vessels", value: "~100,000 km" },
+   717→      { label: "Cardiac Output", value: "~5 L/min" },
+   718→      { label: "Blood Volume", value: "~5 L" },
+   719→    ],
+   720→    organs: [
+   721→      {
+   722→        id: "heart",
+   723→        name: "Heart",
+   724→        latinName: "Cor",
+   725→        weight: "~300 g",
+   726→        overview:
+   727→          "A four-chambered muscular pump located in the middle mediastinum. Its walls — epicardium, myocardium, and endocardium — contract in a precisely timed cycle driven by the intrinsic conduction system.",
+   728→        location: "Middle mediastinum, behind the sternum, level T5–T8.",
+   729→        function:
+   730→          "Pumps deoxygenated blood to the lungs via the pulmonary circulation and oxygenated blood to the body via the systemic circulation.",
+   731→        bloodSupply:
+   732→          "Right and left coronary arteries arising from the aortic sinuses, drained by the coronary sinus and cardiac veins.",
+   733→        nerveSupply:
+   734→          "Autonomic innervation by sympathetic cardiac nerves (accelerator) and the vagus nerve (depressor), plus the intrinsic SA and AV nodes.",
+   735→        clinicalImportance:
+   736→          "Occlusion of a coronary artery causes myocardial infarction; the left anterior descending is colloquially the 'widow-maker'.",
+   737→        commonDiseases: [
+   738→          "Myocardial Infarction",
+   739→          "Heart Failure",
+   740→          "Atrial Fibrillation",
+   741→          "Infective Endocarditis",
+   742→        ],
+   743→      },
+   744→      {
+   745→        id: "aorta",
+   746→        name: "Aorta",
+   747→        latinName: "Aorta",
+   748→        weight: "~100 g",
+   749→        overview:
+   750→          "The largest artery in the body, originating from the left ventricle. It is divided into ascending, arch, thoracic, and abdominal segments.",
+   751→        location: "From the left ventricle, arching over the left main bronchus, descending through the diaphragm to bifurcate at L4.",
+   752→        function:
+   753→          "Conducts oxygenated blood from the heart to all systemic arteries; the elastic recoil maintains diastolic pressure and coronary flow.",
+   754→        bloodSupply:
+   755→          "Nourished by vasa vasorum from intercostal, lumbar, and visceral branches.",
+   756→        nerveSupply:
+   757→          "Sympathetic fibers from the cardiac and splanchnic plexuses provide vasomotor control.",
+   758→        clinicalImportance:
+   759→          "Aortic dissection — a tear in the intima — causes tearing chest/back pain and risks catastrophic rupture or malperfusion.",
+   760→        commonDiseases: [
+   761→          "Aortic Dissection",
+   762→          "Aortic Aneurysm",
+   763→          "Coarctation of the Aorta",
+   764→          "Aortic Stenosis",
+   765→        ],
+   766→      },
+   767→      {
+   768→        id: "coronary-arteries",
+   769→        name: "Coronary Arteries",
+   770→        latinName: "Arteriae Coronariae",
+   771→        overview:
+   772→          "The first branches of the aorta — left (LCA) and right (RCA) — that supply the myocardium. The LCA divides into the left anterior descending and circumflex arteries.",
+   773→        location: "Epicardial surface of the heart, within the atrioventricular and interventricular grooves.",
+   774→        function:
+   775→          "Deliver oxygenated blood to the myocardium; the LAD supplies the anterior wall, the RCA the inferior wall, and the LCx the lateral wall.",
+   776→        bloodSupply:
+   777→          "Receive their own microvascular supply via vasa vasorum of the arterial wall.",
+   778→        nerveSupply:
+   779→          "Sympathetic and parasympathetic fibers mediate vasomotor tone, with metabolic autoregulation dominating control.",
+   780→        clinicalImportance:
+   781→          "Atherosclerotic plaque rupture here causes acute coronary syndromes and is the leading cause of death worldwide.",
+   782→        commonDiseases: [
+   783→          "Atherosclerosis",
+   784→          "Myocardial Infarction",
+   785→          "Coronary Artery Spasm",
+   786→          "Coronary Artery Dissection",
+   787→        ],
+   788→      },
+   789→      {
+   790→        id: "pulmonary-artery",
+   791→        name: "Pulmonary Artery",
+   792→        latinName: "Truncus Pulmonalis",
+   793→        overview:
+   794→          "The only artery in the adult that carries deoxygenated blood. It arises from the right ventricle and bifurcates into the right and left pulmonary arteries beneath the aortic arch.",
+   795→        location: "Anterior mediastinum, from the right ventricle to the lung hila.",
+   796→        function:
+   797→          "Transports deoxygenated blood to the pulmonary capillaries for gas exchange, the only artery carrying venous blood.",
+   798→        bloodSupply:
+   799→          "Nourished by bronchial and vasa vasorum vessels.",
+   800→        nerveSupply:
+   801→          "Sympathetic fibers from the cardiac plexus modulate pulmonary vasomotor tone.",
+   802→        clinicalImportance:
+   803→          "Pulmonary embolism — obstruction by an embolus — is a leading cause of sudden death and presents with dyspnea and hypoxia.",
+   804→        commonDiseases: [
+   805→          "Pulmonary Embolism",
+   806→          "Pulmonary Hypertension",
+   807→          "Patent Ductus Arteriosus",
+   808→          "Pulmonary Stenosis",
+   809→        ],
+   810→      },
+   811→      {
+   812→        id: "superior-vena-cava",
+   813→        name: "Superior Vena Cava",
+   814→        latinName: "Vena Cava Superior",
+   815→        overview:
+   816→          "A large valveless vein formed by the union of the left and right brachiocephalic veins. It drains blood from the upper half of the body into the right atrium.",
+   817→        location: "Superior mediastinum, to the right of the ascending aorta.",
+   818→        function:
+   819→          "Returns deoxygenated blood from the head, neck, upper limbs, and upper thorax to the right atrium.",
+   820→        bloodSupply:
+   821→          "Vasa vasorum from pericardiophrenic and bronchial arteries.",
+   822→        nerveSupply:
+   823→          "Sympathetic fibers from the cardiac plexus.",
+   824→        clinicalImportance:
+   825→          "External compression, classically by a lung tumor, causes superior vena cava syndrome with facial and upper limb edema.",
+   826→        commonDiseases: [
+   827→          "Superior Vena Cava Syndrome",
+   828→          "Central Venous Thrombosis",
+   829→          "Catheter-Related Stenosis",
+   830→        ],
+   831→      },
+   832→      {
+   833→        id: "carotid-artery",
+   834→        name: "Carotid Artery",
+   835→        latinName: "Arteria Carotis Communis",
+   836→        overview:
+   837→          "The paired common carotid arteries bifurcate at the level of C4 into the internal carotid (supplying the brain) and external carotid (supplying the face and neck).",
+   838→        location: "Lateral neck within the carotid sheath, beside the internal jugular vein and vagus nerve.",
+   839→        function:
+   840→          "Supplies the brain (internal) and structures of the face, scalp, and neck (external); the bifurcation houses the carotid sinus and body.",
+   841→        bloodSupply:
+   842→          "Supplies blood itself; its wall nourished by vasa vasorum.",
+   843→        nerveSupply:
+   844→          "Carotid sinus (baroreceptor) and carotid body (chemoreceptor) innervated by the glossopharyngeal nerve.",
+   845→        clinicalImportance:
+   846→          "Carotid bifurcation is a prime site of atherosclerosis; emboli here cause transient ischemic attacks and stroke.",
+   847→        commonDiseases: [
+   848→          "Carotid Stenosis",
+   849→          "Carotid Dissection",
+   850→          "Stroke",
+   851→          "Carotid Body Tumor",
+   852→        ],
+   853→      },
+   854→      {
+   855→        id: "capillaries",
+   856→        name: "Capillaries",
+   857→        latinName: "Vasa Capillaria",
+   858→        overview:
+   859→          "The smallest blood vessels — 5–10 µm in diameter — forming a vast network where gas, nutrient, and waste exchange occurs between blood and tissues.",
+   860→        location: "Throughout every tissue, between arterioles and venules.",
+   861→        function:
+   862→          "Site of diffusion of oxygen, carbon dioxide, nutrients, and waste; total surface area estimated at 600–1000 m².",
+   863→        bloodSupply:
+   864→          "Supplied by postcapillary venules and arterioles; themselves the exchange endpoint.",
+   865→        nerveSupply:
+   866→          "Precapillary sphincters respond to local metabolic autoregulation rather than direct innervation.",
+   867→        clinicalImportance:
+   868→          "Capillary leak underlies septic shock, anaphylaxis, and burns; loss of capillary integrity drives edema.",
+   869→        commonDiseases: [
+   870→          "Capillary Leak Syndrome",
+   871→          "Diabetic Microangiopathy",
+   872→          "Systemic Capillary Leak Syndrome",
+   873→        ],
+   874→      },
+   875→    ],
+   876→  },
+   877→
+   878→  // --------------------------------------------------------------------------
+   879→  {
+   880→    id: "respiratory",
+   881→    name: "Respiratory System",
+   882→    latinName: "Systema Respiratorium",
+   883→    icon: "Wind",
+   884→    color: "#16a085",
+   885→    tagline: "The 20,000-breath-a-day engine of oxygen.",
+   886→    description:
+   887→      "The respiratory system delivers oxygen to the blood and removes carbon dioxide through a series of branching airways ending in 300–500 million alveoli. It also phonates, smells, and helps maintain acid–base balance.",
+   888→    funFact:
+   889→      "If unfolded flat, the alveolar surface of your lungs would cover roughly the area of a tennis court — about 70 m².",
+   890→    stats: [
+   891→      { label: "Breaths / Day", value: "~23,000" },
+   892→      { label: "Alveoli", value: "~480 million" },
+   893→      { label: "Surface Area", value: "~70 m²" },
+   894→      { label: "Tidal Volume", value: "~500 mL" },
+   895→    ],
+   896→    organs: [
+   897→      {
+   898→        id: "nasal-cavity",
+   899→        name: "Nasal Cavity",
+   900→        latinName: "Cavitas Nasi",
+   901→        overview:
+   902→          "A paired, air-filled space lined by respiratory and olfactory mucosa, divided by the nasal septum and bounded by three turbinate bones that warm, humidify, and filter inspired air.",
+   903→        location: "Center of the face, between the orbits and above the hard palate.",
+   904→        function:
+   905→          "Warms, humidifies, and filters air; houses olfactory receptors; resonates the voice; and drains the paranasal sinuses.",
+   906→        bloodSupply:
+   907→          "Branches of the maxillary, facial, and ophthalmic arteries — Kiesselbach's plexus on the anterior septum is the source of most nosebleeds.",
+   908→        nerveSupply:
+   909→          "Trigeminal nerve (V1, V2) for general sensation; olfactory nerve (CN I) for smell.",
+   910→        clinicalImportance:
+   911→          "Epistaxis is most often anterior at Kiesselbach's plexus and managed with pressure or cautery; chronic obstruction can indicate deviated septum.",
+   912→        commonDiseases: [
+   913→          "Epistaxis",
+   914→          "Allergic Rhinitis",
+   915→          "Deviated Septum",
+   916→          "Sinusitis",
+   917→        ],
+   918→      },
+   919→      {
+   920→        id: "trachea",
+   921→        name: "Trachea",
+   922→        latinName: "Trachea",
+   923→        weight: "~30 g",
+   924→        overview:
+   925→          "A 10–12 cm fibrocartilaginous tube held open by 16–20 C-shaped cartilage rings, lined by pseudostratified ciliated columnar epithelium.",
+   926→        location: "Anterior mediastinum, from the cricoid cartilage (C6) to the carina (T4/5).",
+   927→        function:
+   928→          "Conducts air to and from the lungs; its cartilage rings prevent collapse while the posterior membrane allows food passage during swallowing.",
+   929→        bloodSupply:
+   930→          "Inferior thyroid and bronchial arteries.",
+   931→        nerveSupply:
+   932→          "Vagus nerve (parasympathetic secretion and bronchoconstriction) and sympathetic fibers (bronchodilation).",
+   933→        clinicalImportance:
+   934→          "Tracheostomy is performed at levels 2–4 to secure an airway; foreign body aspiration preferentially enters the right main bronchus.",
+   935→        commonDiseases: [
+   936→          "Tracheitis",
+   937→          "Tracheal Stenosis",
+   938→          "Foreign Body Aspiration",
+   939→          "Tracheomalacia",
+   940→        ],
+   941→      },
+   942→      {
+   943→        id: "bronchi",
+   944→        name: "Bronchi",
+   945→        latinName: "Bronchi",
+   946→        overview:
+   947→          "The conducting airways that branch from the tracheal bifurcation into the right and left main bronchi, then lobar, segmental, and subsegmental branches down to terminal bronchioles.",
+   948→        location: "Within the lungs, branching through the hilum into each lobe.",
+   949→        function:
+   950→          "Distribute air through 23 generations of branching to reach the respiratory zone; mucociliary clearance protects against pathogens.",
+   951→        bloodSupply:
+   952→          "Bronchial arteries from the aorta provide oxygenated blood to the airway walls.",
+   953→        nerveSupply:
+   954→          "Pulmonary plexus (vagal parasympathetic and sympathetic fibers).",
+   955→        clinicalImportance:
+   956→          "Asthma involves reversible bronchoconstriction; chronic bronchitis is defined by productive cough for ≥3 months over 2 consecutive years.",
+   957→        commonDiseases: [
+   958→          "Asthma",
+   959→          "Chronic Bronchitis",
+   960→          "Bronchiectasis",
+   961→          "Bronchogenic Carcinoma",
+   962→        ],
+   963→      },
+   964→      {
+   965→        id: "left-lung",
+   966→        name: "Left Lung",
+   967→        latinName: "Pulmo Sinister",
+   968→        weight: "~450 g",
+   969→        overview:
+   970→          "The left lung has two lobes — superior and inferior — separated by the oblique fissure, and features the cardiac notch to accommodate the heart's left ventricle.",
+   971→        location: "Left thoracic cavity, surrounding the heart laterally and posteriorly.",
+   972→        function:
+   973→          "Performs gas exchange via its alveolar surface; the left lung is slightly smaller than the right due to the heart's position.",
+   974→        bloodSupply:
+   975→          "Deoxygenated blood via the left pulmonary artery; oxygenated wall supply via the bronchial arteries.",
+   976→        nerveSupply:
+   977→          "Pulmonary plexus (vagal parasympathetic and sympathetic fibers); visceral pleura is insensitive.",
+   978→        clinicalImportance:
+   979→          "The left lung has 8 bronchopulmonary segments and is the typical site of aspiration in right-sided lying patients.",
+   980→        commonDiseases: [
+   981→          "Pneumonia",
+   982→          "Lung Cancer",
+   983→          "Pulmonary Embolism",
+   984→          "Tuberculosis",
+   985→        ],
+   986→      },
+   987→      {
+   988→        id: "right-lung",
+   989→        name: "Right Lung",
+   990→        latinName: "Pulmo Dexter",
+   991→        weight: "~500 g",
+   992→        overview:
+   993→          "The larger of the two lungs, with three lobes — superior, middle, and inferior — divided by horizontal and oblique fissures, and 10 bronchopulmonary segments.",
+   994→        location: "Right thoracic cavity.",
+   995→        function:
+   996→          "Provides the larger share of gas exchange; the right main bronchus is shorter, wider, and more vertical, predisposing to aspiration.",
+   997→        bloodSupply:
+   998→          "Right pulmonary artery (functional) and bronchial arteries (nutritive).",
+   999→        nerveSupply:
+  1000→          "Right pulmonary plexus surrounding the right main bronchus.",
+  1001→        clinicalImportance:
+  1002→          "Aspirated material and inhaled foreign bodies preferentially lodge in the right lower lobe due to airway geometry.",
+  1003→        commonDiseases: [
+  1004→          "Pneumonia",
+  1005→          "Aspiration Pneumonitis",
+  1006→          "Mesothelioma",
+  1007→          "Pulmonary Edema",
+  1008→        ],
+  1009→      },
+  1010→      {
+  1011→        id: "alveoli",
+  1012→        name: "Alveoli",
+  1013→        latinName: "Alveoli Pulmonis",
+  1014→        overview:
+  1015→          "Thin-walled, cup-shaped sacs (~0.2 mm diameter) where gas exchange occurs. Their walls are lined by type I pneumocytes for diffusion, type II pneumocytes producing surfactant, and alveolar macrophages.",
+  1016→        location: "Terminal ends of the respiratory bronchioles and alveolar ducts.",
+  1017→        function:
+  1018→          "Provide an enormous surface (~70 m²) and an ultrathin blood–air barrier for rapid oxygen and CO₂ exchange.",
+  1019→        bloodSupply:
+  1020→          "Dense capillary networks from the pulmonary arteries.",
+  1021→        nerveSupply:
+  1022→          "Minimally innervated; response is via local chemical and mechanical signals rather than direct nerves.",
+  1023→        clinicalImportance:
+  1024→          "Surfactant deficiency causes neonatal respiratory distress syndrome; alveolar destruction is the hallmark of emphysema.",
+  1025→        commonDiseases: [
+  1026→          "Emphysema",
+  1027→          "Neonatal Respiratory Distress Syndrome",
+  1028→          "Acute Respiratory Distress Syndrome",
+  1029→          "Pulmonary Fibrosis",
+  1030→        ],
+  1031→      },
+  1032→      {
+  1033→        id: "diaphragm",
+  1034→        name: "Diaphragm",
+  1035→        latinName: "Diaphragma",
+  1036→        weight: "~250 g",
+  1037→        overview:
+  1038→          "The dome-shaped primary muscle of inspiration, separating the thoracic and abdominal cavities. It has peripheral muscular fibers converging on a central tendon.",
+  1039→        location: "Between the thoracic and abdominal cavities, attaching to the lower ribs, sternum, and lumbar vertebrae.",
+  1040→        function:
+  1041→          "Contracts to flatten and descend, increasing thoracic volume during inspiration; also contributes to esophageal and venous return functions.",
+  1042→        bloodSupply:
+  1043→          "Pericardiophrenic, musculophrenic, superior phrenic, and inferior phrenic arteries.",
+  1044→        nerveSupply:
+  1045→          "Right and left phrenic nerves (C3–C5) — 'C3, 4, 5 keeps the diaphragm alive'.",
+  1046→        clinicalImportance:
+  1047→          "Diaphragmatic paralysis from phrenic nerve injury causes paradoxical respiration and breathlessness, especially when supine.",
+  1048→        commonDiseases: [
+  1049→          "Diaphragmatic Hernia",
+  1050→          "Phrenic Nerve Palsy",
+  1051→          "Eventration",
+  1052→          "Hiccups (Singultus)",
+  1053→        ],
+  1054→      },
+  1055→      {
+  1056→        id: "pleura",
+  1057→        name: "Pleura",
+  1058→        latinName: "Pleura",
+  1059→        overview:
+  1060→          "A thin serous membrane forming a closed sac around each lung, with a visceral layer adherent to the lung and a parietal layer lining the thoracic wall; the potential pleural space contains a few milliliters of lubricating fluid.",
+  1061→        location: "Lining the thoracic cavity and covering each lung.",
+  1062→        function:
+  1063→          "Reduces friction during respiration and couples lung expansion to chest wall movement via surface tension of pleural fluid.",
+  1064→        bloodSupply:
+  1065→          "Parietal pleura from intercostal and internal thoracic arteries; visceral pleura from bronchial arteries.",
+  1066→        nerveSupply:
+  1067→          "Parietal pleura is pain-sensitive via intercostal and phrenic nerves; visceral pleura is insensitive.",
+  1068→        clinicalImportance:
+  1069→          "Air in the pleural space (pneumothorax) uncouples the lung from the chest wall and causes collapse; tension pneumothorax is life-threatening.",
+  1070→        commonDiseases: [
+  1071→          "Pneumothorax",
+  1072→          "Pleural Effusion",
+  1073→          "Pleuritis",
+  1074→          "Mesothelioma",
+  1075→        ],
+  1076→      },
+  1077→    ],
+  1078→  },
+  1079→
+  1080→  // --------------------------------------------------------------------------
+  1081→  {
+  1082→    id: "digestive",
+  1083→    name: "Digestive System",
+  1084→    latinName: "Systema Digestorium",
+  1085→    icon: "Stomach",
+  1086→    color: "#d35400",
+  1087→    tagline: "A 9-meter journey from bite to building block.",
+  1088→    description:
+  1089→      "The digestive system breaks food into absorbable molecules through a continuous tube from mouth to anus, aided by accessory organs including the liver, gallbladder, and pancreas. It also houses the gut microbiome and a major portion of the immune system.",
+  1090→    funFact:
+  1091→      "The gut microbiome contains roughly 100 trillion microbes — about 10 times more bacterial cells than you have human cells.",
+  1092→    stats: [
+  1093→      { label: "GI Tract Length", value: "~9 m" },
+  1094→      { label: "Transit Time", value: "24–72 h" },
+  1095→      { label: "Surface Area", value: "~32 m²" },
+  1096→      { label: "Gut Microbes", value: "~100 trillion" },
+  1097→    ],
+  1098→    organs: [
+  1099→      {
+  1100→        id: "tongue",
+  1101→        name: "Tongue",
+  1102→        latinName: "Lingua",
+  1103→        weight: "~70 g",
+  1104→        overview:
+  1105→          "A muscular hydrostat covered in mucosa, anchored to the floor of the mouth and containing taste buds within papillae. Its intrinsic and extrinsic muscles allow remarkable dexterity.",
+  1106→        location: "Oral cavity, occupying the floor of the mouth.",
+  1107→        function:
+  1108→          "Manipulates food during mastication, forms the bolus, initiates swallowing, houses taste receptors, and shapes speech.",
+  1109→        bloodSupply:
+  1110→          "Lingual artery (a branch of the external carotid) with venous drainage to the lingual vein.",
+  1111→        nerveSupply:
+  1112→          "Hypoglossal nerve (CN XII) for motor; lingual nerve (CN V3) for general sensation; chorda tympani (CN VII) for taste anteriorly; glossopharyngeal (CN IX) posteriorly.",
+  1113→        clinicalImportance:
+  1114→          "Hypoglossal palsy causes the tongue to deviate TOWARD the affected side on protrusion; oral cancer often arises on the lateral tongue.",
+  1115→        commonDiseases: [
+  1116→          "Oral Squamous Cell Carcinoma",
+  1117→          "Geographic Tongue",
+  1118→          "Glossitis",
+  1119→          "Hypoglossal Palsy",
+  1120→        ],
+  1121→      },
+  1122→      {
+  1123→        id: "esophagus",
+  1124→        name: "Esophagus",
+  1125→        latinName: "Esophagus",
+  1126→        weight: "~50 g",
+  1127→        overview:
+  1128→          "A 25-cm muscular tube lined by non-keratinized stratified squamous epithelium that conveys food from the pharynx to the stomach using peristalsis.",
+  1129→        location: "Posterior mediastinum, from the pharynx (C6) through the diaphragm to the cardia of the stomach (T11).",
+  1130→        function:
+  1131→          "Transports the food bolus to the stomach via primary and secondary peristaltic waves; the lower esophageal sphincter prevents reflux.",
+  1132→        bloodSupply:
+  1133→          "Inferior thyroid, esophageal, bronchial, left gastric, and left phrenic arteries — segmental supply with poor anastomosis.",
+  1134→        nerveSupply:
+  1135→          "Vagus nerve and sympathetic trunks forming the esophageal plexus.",
+  1136→        clinicalImportance:
+  1137→          "Chronic acid reflux (GERD) can cause Barrett's esophagus, a premalignant metaplasia predisposing to adenocarcinoma.",
+  1138→        commonDiseases: [
+  1139→          "GERD",
+  1140→          "Barrett's Esophagus",
+  1141→          "Esophageal Cancer",
+  1142→          "Achalasia",
+  1143→        ],
+  1144→      },
+  1145→      {
+  1146→        id: "stomach",
+  1147→        name: "Stomach",
+  1148→        latinName: "Gaster",
+  1149→        weight: "~150 g empty",
+  1150→        overview:
+  1151→          "A J-shaped reservoir divided into cardia, fundus, body, antrum, and pylorus. Its glandular mucosa contains parietal, chief, G, and mucous cells producing acid, pepsin, gastrin, and mucus.",
+  1152→        location: "Left upper quadrant, beneath the left hemidiaphragm.",
+  1153→        function:
+  1154→          "Stores and mechanically churns food, mixes it with gastric acid and pepsin to begin protein digestion, and regulates release into the duodenum.",
+  1155→        bloodSupply:
+  1156→          "Left and right gastric, left and right gastro-omental, and short gastric arteries — all derived from the celiac trunk.",
+  1157→        nerveSupply:
+  1158→          "Anterior and posterior vagal trunks (parasympathetic) and sympathetic fibers from the celiac plexus.",
+  1159→        clinicalImportance:
+  1160→          "Helicobacter pylori infection causes chronic gastritis and peptic ulcer disease and is a Class I gastric carcinogen.",
+  1161→        commonDiseases: [
+  1162→          "Peptic Ulcer Disease",
+  1163→          "Gastric Cancer",
+  1164→          "Gastritis",
+  1165→          "Gastroesophageal Reflux Disease",
+  1166→        ],
+  1167→      },
+  1168→      {
+  1169→        id: "liver",
+  1170→        name: "Liver",
+  1171→        latinName: "Hepar",
+  1172→        weight: "~1.5 kg",
+  1173→        overview:
+  1174→          "The largest internal organ and largest gland in the body, organized into hexagonal lobules around central veins. It performs over 500 functions and receives both portal venous and hepatic arterial blood.",
+  1175→        location: "Right upper quadrant, beneath the right hemidiaphragm.",
+  1176→        function:
+  1177→          "Metabolizes carbohydrates, lipids, and proteins; synthesizes plasma proteins and clotting factors; detoxifies drugs and toxins; stores glycogen, vitamins, and iron; and produces bile.",
+  1178→        bloodSupply:
+  1179→          "Dual supply — ~75% portal vein (nutrient-rich) and ~25% hepatic artery (oxygen-rich); drained by hepatic veins to the IVC.",
+  1180→        nerveSupply:
+  1181→          "Hepatic nerve plexus from the celiac plexus and vagus nerve.",
+  1182→        clinicalImportance:
+  1183→          "Cirrhosis — end-stage fibrosis — causes portal hypertension, ascites, varices, and hepatic encephalopathy.",
+  1184→        commonDiseases: [
+  1185→          "Cirrhosis",
+  1186→          "Hepatitis",
+  1187→          "Hepatocellular Carcinoma",
+  1188→          "Non-Alcoholic Fatty Liver Disease",
+  1189→        ],
+  1190→      },
+  1191→      {
+  1192→        id: "gallbladder",
+  1193→        name: "Gallbladder",
+  1194→        latinName: "Vesica Biliaris",
+  1195→        weight: "~50 g",
+  1196→        overview:
+  1197→          "A pear-shaped reservoir lying under the liver that stores and concentrates bile produced by the liver. It releases bile into the duodenum via the cystic and common bile ducts in response to cholecystokinin.",
+  1198→        location: "Inferior surface of the liver, in the gallbladder fossa.",
+  1199→        function:
+  1200→          "Concentrates bile up to 10-fold and ejects it into the duodenum to emulsify dietary fats.",
+  1201→        bloodSupply:
+  1202→          "Cystic artery, typically a branch of the right hepatic artery.",
+  1203→        nerveSupply:
+  1204→          "Celiac plexus (sympathetic), vagus (parasympathetic), and right phrenic nerve (sensory, explaining referred shoulder pain).",
+  1205→        clinicalImportance:
+  1206→          "Gallstones may obstruct the cystic duct (biliary colic, cholecystitis) or common bile duct (obstructive jaundice, pancreatitis).",
+  1207→        commonDiseases: [
+  1208→          "Cholelithiasis",
+  1209→          "Acute Cholecystitis",
+  1210→          "Biliary Colic",
+  1211→          "Gallstone Pancreatitis",
+  1212→        ],
+  1213→      },
+  1214→      {
+  1215→        id: "pancreas",
+  1216→        name: "Pancreas",
+  1217→        latinName: "Pancreas",
+  1218→        weight: "~100 g",
+  1219→        overview:
+  1220→          "A retroperitoneal gland with dual exocrine and endocrine functions. Acinar cells secrete digestive enzymes, while the islets of Langerhans secrete insulin, glucagon, and other hormones.",
+  1221→        location: "Retroperitoneum, crossing L1–L2, behind the stomach.",
+  1222→        function:
+  1223→          "Exocrine: secretes trypsinogen, lipase, amylase, and bicarbonate into the duodenum. Endocrine: regulates blood glucose via insulin (β-cells) and glucagon (α-cells).",
+  1224→        bloodSupply:
+  1225→          "Splenic, pancreaticoduodenal, and gastroduodenal arteries, all branches of the celiac trunk and SMA.",
+  1226→        nerveSupply:
+  1227→          "Celiac and superior mesenteric plexuses; vagal parasympathetic input.",
+  1228→        clinicalImportance:
+  1229→          "Acute pancreatitis is most commonly caused by gallstones and alcohol; chronic pancreatitis leads to endocrine and exocrine insufficiency.",
+  1230→        commonDiseases: [
+  1231→          "Acute Pancreatitis",
+  1232→          "Pancreatic Cancer",
+  1233→          "Chronic Pancreatitis",
+  1234→          "Diabetes Mellitus",
+  1235→        ],
+  1236→      },
+  1237→      {
+  1238→        id: "small-intestine",
+  1239→        name: "Small Intestine",
+  1240→        latinName: "Intestinum Tenue",
+  1241→        weight: "~1 kg",
+  1242→        overview:
+  1243→          "A 6–7 m convoluted tube divided into duodenum, jejunum, and ileum. Its inner surface is amplified by circular folds, villi, and microvilli to reach ~32 m² of absorptive area.",
+  1244→        location: "Central and lower abdomen, framed by the large intestine.",
+  1245→        function:
+  1246→          "Completes digestion using pancreatic enzymes and bile; absorbs ~90% of nutrients, vitamins, minerals, and water.",
+  1247→        bloodSupply:
+  1248→          "Superior mesenteric artery (most); the duodenum also receives supply from the celiac trunk via the pancreaticoduodenal arcades.",
+  1249→        nerveSupply:
+  1250→          "Vagus (parasympathetic) and superior mesenteric plexus (sympathetic).",
+  1251→        clinicalImportance:
+  1252→          "Celiac disease, Crohn disease (especially terminal ileum), and small bowel obstruction are common clinically significant disorders.",
+  1253→        commonDiseases: [
+  1254→          "Crohn Disease",
+  1255→          "Celiac Disease",
+  1256→          "Small Bowel Obstruction",
+  1257→          "Malabsorption Syndromes",
+  1258→        ],
+  1259→      },
+  1260→      {
+  1261→        id: "large-intestine",
+  1262→        name: "Large Intestine",
+  1263→        latinName: "Intestinum Crassum",
+  1264→        weight: "~1.5 kg (with contents)",
+  1265→        overview:
+  1266→          "A 1.5 m tube comprising cecum, appendix, ascending, transverse, descending, sigmoid colon, rectum, and anal canal. The colonic wall features haustra, teniae coli, and epiploic appendages.",
+  1267→        location: "Framing the abdomen, from the right iliac fossa around to the rectum.",
+  1268→        function:
+  1269→          "Absorbs water and electrolytes, houses gut microbiota that ferment undigested carbohydrates into short-chain fatty acids, and forms and stores feces.",
+  1270→        bloodSupply:
+  1271→          "Superior mesenteric (right and transverse) and inferior mesenteric (descending and sigmoid) arteries; watershed area at the splenic flexure.",
+  1272→        nerveSupply:
+  1273→          "Vagus (parasympathetic proximal); pelvic splanchnic nerves (parasympathetic distal); sympathetic from superior and inferior mesenteric plexuses.",
+  1274→        clinicalImportance:
+  1275→          "The splenic flexure is vulnerable to ischemic colitis; colorectal cancer is one of the most common and screenable cancers.",
+  1276→        commonDiseases: [
+  1277→          "Colorectal Cancer",
+  1278→          "Ulcerative Colitis",
+  1279→          "Appendicitis",
+  1280→          "Diverticulitis",
+  1281→        ],
+  1282→      },
+  1283→    ],
+  1284→  },
+  1285→
+  1286→  // --------------------------------------------------------------------------
+  1287→  {
+  1288→    id: "urinary",
+  1289→    name: "Urinary System",
+  1290→    latinName: "Systema Urinarium",
+  1291→    icon: "Droplet",
+  1292→    color: "#1abc9c",
+  1293→    tagline: "The body's chemical filtration plant.",
+  1294→    description:
+  1295→      "The urinary system filters blood to remove waste and excess fluid, regulates electrolyte and acid–base balance, and produces urine for excretion. The kidneys also secrete renin and erythropoietin, linking urinary function to blood pressure and red cell production.",
+  1296→    funFact:
+  1297→      "The two kidneys filter about 180 liters of plasma per day, yet you excrete only ~1.5 liters of urine — 99% is reabsorbed.",
+  1298→    stats: [
+  1299→      { label: "Nephrons / Kidney", value: "~1 million" },
+  1300→      { label: "Filtrate / Day", value: "~180 L" },
+  1301→      { label: "Urine / Day", value: "~1.5 L" },
+  1302→      { label: "Renal Blood Flow", value: "~1.1 L/min" },
+  1303→    ],
+  1304→    organs: [
+  1305→      {
+  1306→        id: "kidneys",
+  1307→        name: "Kidneys",
+  1308→        latinName: "Renes",
+  1309→        weight: "~150 g each",
+  1310→        overview:
+  1311→          "Paired bean-shaped retroperitoneal organs containing about one million nephrons each. They are organized into an outer cortex, inner medulla with pyramids, and a central renal pelvis.",
+  1312→        location: "Posterior abdominal wall, retroperitoneal, at level T12–L3, with the right kidney slightly lower due to the liver.",
+  1313→        function:
+  1314→          "Filter blood to form urine, regulate fluid and electrolyte balance and acid–base status, and secrete renin and erythropoietin.",
+  1315→        bloodSupply:
+  1316→          "Renal arteries from the aorta, dividing into segmental, interlobar, arcuate, and interlobular arteries supplying the nephrons.",
+  1317→        nerveSupply:
+  1318→          "Renal plexus from the sympathetic trunk (T10–L1) regulates renin release and vascular tone.",
+  1319→        clinicalImportance:
+  1320→          "Chronic kidney disease is silent until late; bilateral renal artery stenosis can cause refractory hypertension.",
+  1321→        commonDiseases: [
+  1322→          "Chronic Kidney Disease",
+  1323→          "Acute Kidney Injury",
+  1324→          "Nephrolithiasis",
+  1325→          "Glomerulonephritis",
+  1326→        ],
+  1327→      },
+  1328→      {
+  1329→        id: "ureters",
+  1330→        name: "Ureters",
+  1331→        latinName: "Ureteres",
+  1332→        weight: "~30 g",
+  1333→        overview:
+  1334→          "Two 25–30 cm muscular tubes transporting urine from the renal pelvis to the bladder via peristalsis. Three narrow points are clinically important sites of stone impaction.",
+  1335→        location: "Retroperitoneum, descending along the psoas muscle into the pelvis.",
+  1336→        function:
+  1337→          "Propel urine from kidneys to bladder by peristaltic contractions of smooth muscle layers.",
+  1338→        bloodSupply:
+  1339→          "Segmental supply from renal, gonadal, common iliac, and inferior vesical arteries.",
+  1340→        nerveSupply:
+  1341→          "Renal, aortic, and pelvic plexuses — visceral afferents follow sympathetic paths to T11–L2.",
+  1342→        clinicalImportance:
+  1343→          "Ureteric stones cause severe colicky pain radiating from loin to groin; the pain is referred to the T11–L2 dermatomes.",
+  1344→        commonDiseases: [
+  1345→          "Ureteric Calculus",
+  1346→          "Ureteral Stricture",
+  1347→          "Ureteral Cancer",
+  1348→          "Vesicoureteral Reflux",
+  1349→        ],
+  1350→      },
+  1351→      {
+  1352→        id: "bladder",
+  1353→        name: "Urinary Bladder",
+  1354→        latinName: "Vesica Urinaria",
+  1355→        weight: "~50 g (empty)",
+  1356→        overview:
+  1357→          "A hollow muscular reservoir with a capacity of ~400–600 mL. Its wall features the detrusor muscle and an internal trigone, and it is supported by the pelvic floor.",
+  1358→        location: "Retropubic space of the lesser pelvis, behind the pubic symphysis.",
+  1359→        function:
+  1360→          "Stores urine and contracts during micturition; the detrusor and sphincter coordination is governed by sacral reflexes and cortical control.",
+  1361→        bloodSupply:
+  1362→          "Superior and inferior vesical arteries from the internal iliac arteries.",
+  1363→        nerveSupply:
+  1364→          "Pelvic splanchnic nerves (S2–S4, parasympathetic) cause detrusor contraction; pudendal nerve controls the external sphincter.",
+  1365→        clinicalImportance:
+  1366→          "Urinary retention in men is usually due to benign prostatic hyperplasia; cystoscopy evaluates hematuria and bladder tumors.",
+  1367→        commonDiseases: [
+  1368→          "Urinary Tract Infection",
+  1369→          "Bladder Cancer",
+  1370→          "Urinary Incontinence",
+  1371→          "Benign Prostatic Hyperplasia",
+  1372→        ],
+  1373→      },
+  1374→      {
+  1375→        id: "urethra",
+  1376→        name: "Urethra",
+  1377→        latinName: "Urethra",
+  1378→        overview:
+  1379→          "The tube conveying urine from the bladder to the exterior. In males it averages 20 cm (prostatic, membranous, spongy parts) and serves both urinary and reproductive functions; in females it is ~4 cm.",
+  1380→        location: "From the internal urethral meatus of the bladder to the external urethral orifice.",
+  1381→        function:
+  1382→          "Conducts urine during micturition; in males also transports semen during ejaculation.",
+  1383→        bloodSupply:
+  1384→          "Inferior vesical, middle rectal, and internal pudendal arteries.",
+  1385→        nerveSupply:
+  1386→          "Pudendal nerve (somatic, external sphincter); pelvic plexus (autonomic).",
+  1387→        clinicalImportance:
+  1388→          "The female urethra's short length predisposes to urinary tract infections; male membranous urethra is at risk in pelvic fractures.",
+  1389→        commonDiseases: [
+  1390→          "Urethritis",
+  1391→          "Urethral Stricture",
+  1392→          "Urethral Trauma",
+  1393→          "Urethral Caruncle",
+  1394→        ],
+  1395→      },
+  1396→      {
+  1397→        id: "nephrons",
+  1398→        name: "Nephrons",
+  1399→        latinName: "Nephron",
+  1400→        overview:
+  1401→          "The functional filtering units of the kidney — each kidney contains about one million. Each nephron consists of a renal corpuscle (glomerulus and Bowman's capsule) and a renal tubule (proximal, loop of Henle, distal, collecting duct).",
+  1402→        location: "Throughout the renal cortex (corpuscles) and medulla (loops and collecting ducts).",
+  1403→        function:
+  1404→          "Filter plasma, reabsorb nutrients and water, and secrete waste to form urine; regulate blood pressure, osmolality, and acid–base balance.",
+  1405→        bloodSupply:
+  1406→          "Afferent arteriole feeds the glomerular capillary tuft; efferent arteriole forms peritubular capillaries and vasa recta.",
+  1407→        nerveSupply:
+  1408→          "Sympathetic renal nerves regulate renin release and arteriolar tone.",
+  1409→        clinicalImportance:
+  1410→          "Diabetic nephropathy begins with glomerular hyperfiltration and progresses to proteinuria and chronic kidney disease.",
+  1411→        commonDiseases: [
+  1412→          "Diabetic Nephropathy",
+  1413→          "Glomerulonephritis",
+  1414→          "Acute Tubular Necrosis",
+  1415→          "Nephrotic Syndrome",
+  1416→        ],
+  1417→      },
+  1418→      {
+  1419→        id: "renal-cortex",
+  1420→        name: "Renal Cortex",
+  1421→        latinName: "Cortex Renalis",
+  1422→        overview:
+  1423→          "The outer granular layer of the kidney containing all renal corpuscles and the convoluted tubules. It extends between the medullary pyramids as the columns of Bertin.",
+  1424→        location: "Outer third of the kidney, beneath the fibrous renal capsule.",
+  1425→        function:
+  1426→          "Houses the glomeruli where plasma filtration occurs and the proximal/distal convoluted tubules where the bulk of reabsorption takes place.",
+  1427→        bloodSupply:
+  1428→          "Interlobular arteries branching from the arcuate arteries, supplying the afferent arterioles of each glomerulus.",
+  1429→        nerveSupply:
+  1430→          "Renal sympathetic nerves (T10–L1).",
+  1431→        clinicalImportance:
+  1432→          "Cortical necrosis from severe ischemia (e.g., post-partum hemorrhage) causes acute kidney injury that may be irreversible.",
+  1433→        commonDiseases: [
+  1434→          "Renal Cortical Necrosis",
+  1435→          "Acute Interstitial Nephritis",
+  1436→          "Renal Cell Carcinoma",
+  1437→          "Cortical Cyst",
+  1438→        ],
+  1439→      },
+  1440→    ],
+  1441→  },
+  1442→
+  1443→  // --------------------------------------------------------------------------
+  1444→  {
+  1445→    id: "endocrine",
+  1446→    name: "Endocrine System",
+  1447→    latinName: "Systema Endocrinum",
+  1448→    icon: "Activity",
+  1449→    color: "#9b59b6",
+  1450→    tagline: "Hormones: the body's slow but powerful messengers.",
+  1451→    description:
+  1452→      "The endocrine system is a network of ductless glands that secrete hormones into the bloodstream to regulate metabolism, growth, reproduction, and homeostasis. It works in concert with the nervous system to maintain long-term balance.",
+  1453→    funFact:
+  1454→      "The pituitary gland — the master gland controlling most others — is only the size of a pea and weighs about 0.5 g.",
+  1455→    stats: [
+  1456→      { label: "Major Glands", value: "~10" },
+  1457→      { label: "Hormones", value: "50+" },
+  1458→      { label: "Master Gland", value: "Pituitary" },
+  1459→      { label: "Largest Gland", value: "Thyroid" },
+  1460→    ],
+  1461→    organs: [
+  1462→      {
+  1463→        id: "pituitary",
+  1464→        name: "Pituitary Gland",
+  1465→        latinName: "Hypophysis",
+  1466→        weight: "~0.5 g",
+  1467→        overview:
+  1468→          "The 'master gland' suspended from the hypothalamus by the infundibulum and housed in the sella turcica. It has an anterior adenohypophysis and a posterior neurohypophysis with distinct embryological origins.",
+  1469→        location: "Sella turcica of the sphenoid bone, just behind the optic chiasm.",
+  1470→        function:
+  1471→          "Anterior lobe secretes GH, ACTH, TSH, FSH, LH, and PRL. Posterior lobe releases oxytocin and ADH synthesized in the hypothalamus.",
+  1472→        bloodSupply:
+  1473→          "Superior, middle, and inferior hypophyseal arteries from the internal carotid; the hypophyseal portal system delivers hypothalamic releasing factors.",
+  1474→        nerveSupply:
+  1475→          "Posterior pituitary is supplied by hypothalamo-hypophyseal nerve tract from the supraoptic and paraventricular nuclei.",
+  1476→        clinicalImportance:
+  1477→          "Pituitary adenomas compressing the optic chiasm cause bitemporal hemianopia; prolactinomas are the most common subtype.",
+  1478→        commonDiseases: [
+  1479→          "Pituitary Adenoma",
+  1480→          "Acromegaly",
+  1481→          "Prolactinoma",
+  1482→          "Sheehan Syndrome",
+  1483→        ],
+  1484→      },
+  1485→      {
+  1486→        id: "thyroid",
+  1487→        name: "Thyroid Gland",
+  1488→        latinName: "Glandula Thyroidea",
+  1489→        weight: "~25 g",
+  1490→        overview:
+  1491→          "A butterfly-shaped endocrine gland with two lateral lobes connected by an isthmus. Its follicular cells produce T3 and T4 from iodinated tyrosine, while parafollicular C cells produce calcitonin.",
+  1492→        location: "Anterior neck, at levels C5–T1, anterior to the trachea and deep to the sternothyroid muscle.",
+  1493→        function:
+  1494→          "Regulates basal metabolic rate via T3 and T4, influences growth and development, and lowers blood calcium via calcitonin.",
+  1495→        bloodSupply:
+  1496→          "Superior (from external carotid) and inferior (from subclavian) thyroid arteries; rarely a thyroid ima artery.",
+  1497→        nerveSupply:
+  1498→          "Sympathetic fibers from the superior and middle cervical ganglia.",
+  1499→        clinicalImportance:
+  1500→          "The recurrent laryngeal nerve runs close to the inferior thyroid artery and is at risk during thyroidectomy, causing voice changes.",
+  1501→        commonDiseases: [
+  1502→          "Hyperthyroidism",
+  1503→          "Hypothyroidism",
+  1504→          "Hashimoto Thyroiditis",
+  1505→          "Thyroid Cancer",
+  1506→        ],
+  1507→      },
+  1508→      {
+  1509→        id: "parathyroid",
+  1510→        name: "Parathyroid Glands",
+  1511→        latinName: "Glandulae Parathyroideae",
+  1512→        weight: "~0.04 g",
+  1513→        overview:
+  1514→          "Usually four small glands (two superior, two inferior) embedded in the posterior thyroid capsule. Chief cells secrete parathyroid hormone (PTH), the master regulator of blood calcium.",
+  1515→        location: "Posterior surface of the thyroid lobes, typically two on each side.",
+  1516→        function:
+  1517→          "PTH raises blood calcium by stimulating osteoclasts, increasing renal calcium reabsorption, and activating vitamin D for intestinal absorption.",
+  1518→        bloodSupply:
+  1519→          "Inferior thyroid artery is the dominant supply; superior thyroid artery contributes variably.",
+  1520→        nerveSupply:
+  1521→          "Sympathetic vasomotor fibers from the cervical ganglia.",
+  1522→        clinicalImportance:
+  1523→          "Accidental removal during thyroidectomy causes hypocalcemia with tetany and perioral tingling — Chvostek and Trousseau signs.",
+  1524→        commonDiseases: [
+  1525→          "Hyperparathyroidism",
+  1526→          "Hypoparathyroidism",
+  1527→          "Parathyroid Adenoma",
+  1528→          "Hypocalcemia",
+  1529→        ],
+  1530→      },
+  1531→      {
+  1532→        id: "adrenal-glands",
+  1533→        name: "Adrenal Glands",
+  1534→        latinName: "Glandulae Suprarenales",
+  1535→        weight: "~5 g each",
+  1536→        overview:
+  1537→          "Paired triangular glands sitting atop each kidney, comprising an outer cortex (zona glomerulosa, fasciculata, reticularis) and an inner medulla derived from neural crest cells.",
+  1538→        location: "Superomedial to each kidney, in the retroperitoneum.",
+  1539→        function:
+  1540→          "Cortex secretes mineralocorticoids (aldosterone), glucocorticoids (cortisol), and androgens. Medulla secretes adrenaline and noradrenaline as part of the sympathetic response.",
+  1541→        bloodSupply:
+  1542→          "Superior, middle, and inferior suprarenal arteries from the inferior phrenic, aorta, and renal artery; a single central vein drains to the IVC (right) or renal vein (left).",
+  1543→        nerveSupply:
+  1544→          "Preganglionic sympathetic fibers from the splanchnic nerves directly innervate the chromaffin cells of the medulla.",
+  1545→        clinicalImportance:
+  1546→          "Pheochromocytoma causes episodic severe hypertension; Cushing syndrome results from chronic cortisol excess.",
+  1547→        commonDiseases: [
+  1548→          "Cushing Syndrome",
+  1549→          "Addison Disease",
+  1550→          "Pheochromocytoma",
+  1551→          "Congenital Adrenal Hyperplasia",
+  1552→        ],
+  1553→      },
+  1554→      {
+  1555→        id: "pancreatic-islets",
+  1556→        name: "Pancreatic Islets",
+  1557→        latinName: "Insulae Pancreaticae",
+  1558→        weight: "~1–2 g total",
+  1559→        overview:
+  1560→          "The endocrine portion of the pancreas — clusters of ~1 million islets of Langerhans scattered among the exocrine acini, comprising 1–2% of pancreatic mass.",
+  1561→        location: "Distributed throughout the pancreas, more concentrated in the tail.",
+  1562→        function:
+  1563→          "β-cells secrete insulin (lowers blood glucose), α-cells glucagon (raises it), δ-cells somatostatin, and PP-cells pancreatic polypeptide.",
+  1564→        bloodSupply:
+  1565→          "Splenic, pancreaticoduodenal, and gastroduodenal arteries.",
+  1566→        nerveSupply:
+  1567→          "Sympathetic and parasympathetic (vagal) fibers from the celiac and superior mesenteric plexuses.",
+  1568→        clinicalImportance:
+  1569→          "Autoimmune destruction of β-cells causes type 1 diabetes; insulin resistance with β-cell dysfunction underlies type 2 diabetes.",
+  1570→        commonDiseases: [
+  1571→          "Type 1 Diabetes Mellitus",
+  1572→          "Type 2 Diabetes Mellitus",
+  1573→          "Insulinoma",
+  1574→          "Diabetic Ketoacidosis",
+  1575→        ],
+  1576→      },
+  1577→      {
+  1578→        id: "pineal",
+  1579→        name: "Pineal Gland",
+  1580→        latinName: "Glandula Pinealis",
+  1581→        weight: "~0.15 g",
+  1582→        overview:
+  1583→          "A small neuroendocrine gland shaped like a pinecone, named for its appearance. It is a circumventricular organ outside the blood–brain barrier and produces melatonin in response to darkness.",
+  1584→        location: "Epithalamus, midline, posterior to the third ventricle near the corpora quadrigemina.",
+  1585→        function:
+  1586→          "Secretes melatonin, regulating circadian rhythms and seasonal reproductive functions in some species.",
+  1587→        bloodSupply:
+  1588→          "Branches of the posterior cerebral artery.",
+  1589→        nerveSupply:
+  1590→          "Sympathetic fibers from the superior cervical ganglion via the nervi conarii relay light-dark information.",
+  1591→        clinicalImportance:
+  1592→          "Pineal region tumors can compress the superior colliculus causing Parinaud syndrome (paralysis of upward gaze).",
+  1593→        commonDiseases: [
+  1594→          "Pinealoma",
+  1595→          "Parinaud Syndrome",
+  1596→          "Pineal Cyst",
+  1597→          "Circadian Rhythm Disorders",
+  1598→        ],
+  1599→      },
+  1600→      {
+  1601→        id: "thymus-endocrine",
+  1602→        name: "Thymus",
+  1603→        latinName: "Thymus",
+  1604→        weight: "~25 g (adult)",
+  1605→        overview:
+  1606→          "A bilobed lymphoepithelial gland largest in childhood and involuting after puberty. It is both a primary lymphoid organ and an endocrine gland through its secretion of thymopoietin and thymulin.",
+  1607→        location: "Anterosuperior mediastinum, behind the sternum and anterior to the great vessels.",
+  1608→        function:
+  1609→          "Site of T-lymphocyte maturation; thymic hormones promote T-cell differentiation and self-tolerance.",
+  1610→        bloodSupply:
+  1611→          "Inferior thyroid, internal thoracic, and pericardiophrenic arteries.",
+  1612→        nerveSupply:
+  1613→          "Vagus and sympathetic fibers from the cervical ganglia.",
+  1614→        clinicalImportance:
+  1615→          "Myasthenia gravis is associated with thymic hyperplasia or thymoma; thymectomy can improve symptoms.",
+  1616→        commonDiseases: [
+  1617→          "Myasthenia Gravis",
+  1618→          "Thymoma",
+  1619→          "DiGeorge Syndrome",
+  1620→          "Thymic Hyperplasia",
+  1621→        ],
+  1622→      },
+  1623→      {
+  1624→        id: "gonads",
+  1625→        name: "Gonads",
+  1626→        latinName: "Glandulae Genitales",
+  1627→        overview:
+  1628→          "The primary reproductive organs — testes in males and ovaries in females — which serve dual exocrine (gametes) and endocrine (sex steroids) functions.",
+  1629→        location: "Testes in the scrotum; ovaries in the lateral pelvic wall.",
+  1630→        function:
+  1631→          "Testes produce testosterone and sperm. Ovaries produce estrogen and progesterone and release oocytes in cyclic fashion.",
+  1632→        bloodSupply:
+  1633→          "Testicular/ovarian arteries from the aorta; venous drainage to the IVC (right) and renal vein (left).",
+  1634→        nerveSupply:
+  1635→          "Testicular/ovarian plexus from the aortic and renal plexuses; sympathetic T10–L1.",
+  1636→        clinicalImportance:
+  1637→          "Polycystic ovary syndrome is the leading cause of anovulatory infertility; testicular tumors often present as a painless scrotal mass.",
+  1638→        commonDiseases: [
+  1639→          "Polycystic Ovary Syndrome",
+  1640→          "Testicular Cancer",
+  1641→          "Ovarian Cancer",
+  1642→          "Hypogonadism",
+  1643→        ],
+  1644→      },
+  1645→    ],
+  1646→  },
+  1647→
+  1648→  // --------------------------------------------------------------------------
+  1649→  {
+  1650→    id: "lymphatic",
+  1651→    name: "Lymphatic System",
+  1652→    latinName: "Systema Lymphoideum",
+  1653→    icon: "Shield",
+  1654→    color: "#2ecc71",
+  1655→    tagline: "The body's drainage and defense network.",
+  1656→    description:
+  1657→      "The lymphatic system returns interstitial fluid to the bloodstream, transports dietary lipids from the gut, and provides immune surveillance through a network of vessels, nodes, and lymphoid organs. It is the highway of adaptive immunity.",
+  1658→    funFact:
+  1659→      "You have about 600–700 lymph nodes — the smallest are barely a millimeter, and they collectively filter lymph from nearly every tissue.",
+  1660→    stats: [
+  1661→      { label: "Lymph Nodes", value: "~600–700" },
+  1662→      { label: "Lymph / Day", value: "~3 L" },
+  1663→      { label: "Largest Node Cluster", value: "Cervical" },
+  1664→      { label: "Primary Lymphoid", value: "Thymus, Marrow" },
+  1665→    ],
+  1666→    organs: [
+  1667→      {
+  1668→        id: "spleen",
+  1669→        name: "Spleen",
+  1670→        latinName: "Splen",
+  1671→        weight: "~150 g",
+  1672→        overview:
+  1673→          "The largest lymphoid organ, organized into red pulp (for red blood cell filtration) and white pulp (for immune responses). It is highly vascular and lies protected by ribs 9–11.",
+  1674→        location: "Left upper quadrant, beneath ribs 9–11, deep to the stomach.",
+  1675→        function:
+  1676→          "Filters blood, removes aged or abnormal red cells and platelets, recycles iron, mounts immune responses to blood-borne pathogens, and stores a reservoir of blood.",
+  1677→        bloodSupply:
+  1678→          "Splenic artery from the celiac trunk; splenic vein joins the superior mesenteric vein to form the portal vein.",
+  1679→        nerveSupply:
+  1680→          "Celiac plexus (sympathetic vasomotor fibers).",
+  1681→        clinicalImportance:
+  1682→          "Splenic rupture from blunt trauma causes life-threatening intra-abdominal hemorrhage; post-splenectomy patients need vaccination against encapsulated organisms.",
+  1683→        commonDiseases: [
+  1684→          "Splenic Rupture",
+  1685→          "Hypersplenism",
+  1686→          "Splenomegaly",
+  1687→          "Asplenia",
+  1688→        ],
+  1689→      },
+  1690→      {
+  1691→        id: "thymus-lymphatic",
+  1692→        name: "Thymus",
+  1693→        latinName: "Thymus",
+  1694→        weight: "~25 g (adult)",
+  1695→        overview:
+  1696→          "A primary lymphoid organ and the site of T-cell maturation. It is largest relative to body size at birth and reaches its absolute peak around puberty, then gradually involutes into fat.",
+  1697→        location: "Anterosuperior mediastinum, behind the sternum.",
+  1698→        function:
+  1699→          "Develops and selects immunocompetent, self-tolerant T-lymphocytes; thymic epithelial cells secrete thymopoietin and thymulin.",
+  1700→        bloodSupply:
+  1701→          "Inferior thyroid and internal thoracic arteries.",
+  1702→        nerveSupply:
+  1703→          "Vagus and sympathetic fibers.",
+  1704→        clinicalImportance:
+  1705→          "DiGeorge syndrome (22q11 deletion) causes thymic aplasia and T-cell deficiency; thymoma is associated with myasthenia gravis.",
+  1706→        commonDiseases: [
+  1707→          "Thymoma",
+  1708→          "DiGeorge Syndrome",
+  1709→          "Myasthenia Gravis",
+  1710→          "Severe Combined Immunodeficiency",
+  1711→        ],
+  1712→      },
+  1713→      {
+  1714→        id: "lymph-nodes",
+  1715→        name: "Lymph Nodes",
+  1716→        latinName: "Nodi Lymphatici",
+  1717→        weight: "~1 g each",
+  1718→        overview:
+  1719→          "Small bean-shaped encapsulated structures that filter lymph before it returns to the bloodstream. Each node contains a cortex with lymphoid follicles, a paracortex of T-cells, and a medulla with medullary sinuses and cords.",
+  1720→        location: "Distributed throughout the body in regional clusters — cervical, axillary, mediastinal, mesenteric, inguinal.",
+  1721→        function:
+  1722→          "Trap particulate antigens, present them to lymphocytes, and generate adaptive immune responses; site of lymphocyte proliferation and antibody production.",
+  1723→        bloodSupply:
+  1724→          "Segmental arteries from adjacent vessels entering at the hilum, forming capillaries that exit via high endothelial venules for lymphocyte trafficking.",
+  1725→        nerveSupply:
+  1726→          "Sympathetic fibers accompany blood vessels.",
+  1727→        clinicalImportance:
+  1728→          "Lymphadenopathy — node enlargement — is a key sign of infection, malignancy, or autoimmune disease; biopsy of sentinel nodes stages cancer.",
+  1729→        commonDiseases: [
+  1730→          "Lymphadenopathy",
+  1731→          "Lymphoma",
+  1732→          "Metastatic Carcinoma",
+  1733→          "Lymphadenitis",
+  1734→        ],
+  1735→      },
+  1736→      {
+  1737→        id: "tonsils",
+  1738→        name: "Tonsils",
+  1739→        latinName: "Tonsillae",
+  1740→        weight: "~5 g",
+  1741→        overview:
+  1742→          "Clusters of lymphoid tissue encircling the pharynx — the pharyngeal, palatine, lingual, and tubal tonsils forming Waldeyer's ring — that provide a first line of immune defense at mucosal entry points.",
+  1743→        location: "Pharyngeal wall, especially the oropharynx and nasopharynx.",
+  1744→        function:
+  1745→          "Sample ingested and inhaled antigens, generate immune responses, and produce lymphocytes; the palatine tonsils are the largest and most clinically prominent.",
+  1746→        bloodSupply:
+  1747→          "Tonsillar branch of the facial artery, plus ascending palatine, descending palatine, and pharyngeal branches.",
+  1748→        nerveSupply:
+  1749→          "Glossopharyngeal nerve (CN IX) and the tonsillar plexus of the lesser palatine nerves.",
+  1750→        clinicalImportance:
+  1751→          "Tonsillitis is a common childhood infection; peritonsillar abscess (quinsy) is a feared complication requiring drainage.",
+  1752→        commonDiseases: [
+  1753→          "Tonsillitis",
+  1754→          "Peritonsillar Abscess",
+  1755→          "Tonsillar Hypertrophy",
+  1756→          "Tonsillar Cancer",
+  1757→        ],
+  1758→      },
+  1759→      {
+  1760→        id: "bone-marrow",
+  1761→        name: "Bone Marrow",
+  1762→        latinName: "Medulla Ossium",
+  1763→        weight: "~2.6 kg",
+  1764→        overview:
+  1765→          "The primary hematopoietic tissue of the body, filling the medullary cavities of bones. In adults, red marrow is restricted to the axial skeleton and proximal long bones, while yellow marrow fills the rest.",
+  1766→        location: "Medullary cavities of bones — vertebrae, sternum, ribs, pelvis, skull, and proximal femur/humerus in adults.",
+  1767→        function:
+  1768→          "Produces red blood cells, white blood cells, and platelets (red marrow); stores fat (yellow marrow); also serves as a primary lymphoid organ where B-cells mature.",
+  1769→        bloodSupply:
+  1770→          "Nutrient arteries entering via nutrient foramina; sinusoidal capillaries drain to central veins.",
+  1771→        nerveSupply:
+  1772→          "Sympathetic nerves accompany nutrient vessels.",
+  1773→        clinicalImportance:
+  1774→          "Bone marrow aspiration and biopsy diagnose leukemias, lymphomas, and myelodysplastic syndromes; marrow transplantation treats many hematologic diseases.",
+  1775→        commonDiseases: [
+  1776→          "Leukemia",
+  1777→          "Aplastic Anemia",
+  1778→          "Multiple Myeloma",
+  1779→          "Myelodysplastic Syndrome",
+  1780→        ],
+  1781→      },
+  1782→      {
+  1783→        id: "lymph-vessels",
+  1784→        name: "Lymph Vessels",
+  1785→        latinName: "Vasa Lymphatica",
+  1786→        overview:
+  1787→          "A one-way vascular network that drains interstitial fluid as lymph and returns it to the venous circulation via the thoracic duct and right lymphatic duct. Lactals in the intestine absorb dietary fats as chyle.",
+  1788→        location: "Throughout nearly all tissues except CNS, bone marrow, cartilage, and avascular structures.",
+  1789→        function:
+  1790→          "Drain excess interstitial fluid, transport dietary lipids from the gut, and conduct lymphocytes and antigens to lymph nodes.",
+  1791→        bloodSupply:
+  1792→          "Lymphatic vessels themselves are nourished by their surrounding tissue vasa vasorum; terminal ducts drain into the venous system at the jugulo-subclavian junctions.",
+  1793→        nerveSupply:
+  1794→          "Sympathetic fibers accompany larger trunks.",
+  1795→        clinicalImportance:
+  1796→          "Lymphatic obstruction from surgery, radiation, or filariasis causes lymphedema — chronic swelling of the affected limb.",
+  1797→        commonDiseases: [
+  1798→          "Lymphedema",
+  1799→          "Lymphangitis",
+  1800→          "Filariasis",
+  1801→          "Chylothorax",
+  1802→        ],
+  1803→      },
+  1804→    ],
+  1805→  },
+  1806→
+  1807→  // --------------------------------------------------------------------------
+  1808→  {
+  1809→    id: "reproductive",
+  1810→    name: "Reproductive System",
+  1811→    latinName: "Systema Reproductionis",
+  1812→    icon: "Baby",
+  1813→    color: "#e84393",
+  1814→    tagline: "The continuity of life, anatomically explained.",
+  1815→    description:
+  1816→      "The reproductive system produces gametes, supports fertilization and embryonic development, and governs secondary sexual characteristics through hormonal control. This module is presented in a strictly scientific, educational context.",
+  1817→    funFact:
+  1818→      "The ovary contains all the oocytes a female will ever have at birth — about 1–2 million — declining to ~400,000 by puberty, of which only ~400 will ovulate.",
+  1819→    stats: [
+  1820→      { label: "Sperm / Ejaculate", value: "~200 million" },
+  1821→      { label: "Oocytes at Birth", value: "~1–2 million" },
+  1822→      { label: "Menstrual Cycle", value: "~28 days" },
+  1823→      { label: "Gestation", value: "~40 weeks" },
+  1824→    ],
+  1825→    organs: [
+  1826→      {
+  1827→        id: "testes",
+  1828→        name: "Testes",
+  1829→        latinName: "Testes",
+  1830→        weight: "~25 g each",
+  1831→        overview:
+  1832→          "Paired oval male gonads located in the scrotum, descended from the abdomen during fetal development to maintain a temperature ~2°C below core for spermatogenesis. They contain ~800 seminiferous tubules.",
+  1833→        location: "Scrotum, outside the body cavity.",
+  1834→        function:
+  1835→          "Produce spermatozoa in the seminiferous tubules and testosterone via Leydig cells.",
+  1836→        bloodSupply:
+  1837→          "Testicular artery from the aorta; anastomoses with cremasteric and deferential arteries.",
+  1838→        nerveSupply:
+  1839→          "Testicular plexus (T10–L1 sympathetic and vagal parasympathetic); genitofemoral nerve to the cremaster.",
+  1840→        clinicalImportance:
+  1841→          "Cryptorchidism (undescended testis) increases risk of infertility and testicular cancer; testicular torsion is a surgical emergency.",
+  1842→        commonDiseases: [
+  1843→          "Testicular Torsion",
+  1844→          "Testicular Cancer",
+  1845→          "Cryptorchidism",
+  1846→          "Varicocele",
+  1847→        ],
+  1848→      },
+  1849→      {
+  1850→        id: "epididymis",
+  1851→        name: "Epididymis",
+  1852→        latinName: "Epididymis",
+  1853→        weight: "~3 g",
+  1854→        overview:
+  1855→          "A tightly coiled 6-meter tube caped over the posterior testis where sperm mature and acquire motility over 2–3 weeks before passing to the vas deferens.",
+  1856→        location: "Posterolateral surface of each testis.",
+  1857→        function:
+  1858→          "Stores, matures, and propels sperm during ejaculation; absorbs fluid and concentrates sperm.",
+  1859→        bloodSupply:
+  1860→          "Testicular, deferential, and cremasteric arteries.",
+  1861→        nerveSupply:
+  1862→          "Inferior hypogastric and testicular plexuses.",
+  1863→        clinicalImportance:
+  1864→          "Acute epididymitis in young men is often sexually transmitted; it must be distinguished from testicular torsion.",
+  1865→        commonDiseases: [
+  1866→          "Epididymitis",
+  1867→          "Epididymal Cyst",
+  1868→          "Spermatocele",
+  1869→          "Chronic Epididymitis",
+  1870→        ],
+  1871→      },
+  1872→      {
+  1873→        id: "prostate",
+  1874→        name: "Prostate Gland",
+  1875→        latinName: "Prostata",
+  1876→        weight: "~20 g",
+  1877→        overview:
+  1878→          "A walnut-sized fibromuscular gland surrounding the proximal urethra, composed of multiple zones — peripheral, central, transitional, and anterior fibromuscular stroma — each with distinct clinical significance.",
+  1879→        location: "Inferior to the bladder neck, anterior to the rectum, surrounding the prostatic urethra.",
+  1880→        function:
+  1881→          "Secretes a milky alkaline fluid rich in enzymes, citrate, and zinc that supports sperm motility and counteracts vaginal acidity.",
+  1882→        bloodSupply:
+  1883→          "Inferior vesical and middle rectal arteries (from the internal iliac).",
+  1884→        nerveSupply:
+  1885→          "Pelvic splanchnic nerves (parasympathetic) and inferior hypogastric plexus (sympathetic).",
+  1886→        clinicalImportance:
+  1887→          "Benign prostatic hyperplasia arises in the transitional zone causing urinary obstruction; cancer most often arises in the peripheral zone.",
+  1888→        commonDiseases: [
+  1889→          "Benign Prostatic Hyperplasia",
+  1890→          "Prostate Cancer",
+  1891→          "Prostatitis",
+  1892→          "Prostatic Abscess",
+  1893→        ],
+  1894→      },
+  1895→      {
+  1896→        id: "ovaries",
+  1897→        name: "Ovaries",
+  1898→        latinName: "Ovaria",
+  1899→        weight: "~7 g each",
+  1900→        overview:
+  1901→          "Paired almond-shaped female gonads attached to the broad ligament by the mesovarium. They contain follicles at various stages and undergo cyclic ovulation under hypothalamic-pituitary control.",
+  1902→        location: "Lateral pelvic wall, in the ovarian fossa near the bifurcation of the iliac artery.",
+  1903→        function:
+  1904→          "Produce oocytes through folliculogenesis and secrete estrogen, progesterone, inhibin, and relaxin to regulate the menstrual cycle.",
+  1905→        bloodSupply:
+  1906→          "Ovarian artery (aorta) and ovarian branch of uterine artery, forming an anastomotic arcade.",
+  1907→        nerveSupply:
+  1908→          "Ovarian plexus from the aortic and renal plexuses (T10–T11).",
+  1909→        clinicalImportance:
+  1910→          "Polycystic ovary syndrome is a leading cause of infertility; ovarian cancer is often detected late due to vague symptoms.",
+  1911→        commonDiseases: [
+  1912→          "Polycystic Ovary Syndrome",
+  1913→          "Ovarian Cancer",
+  1914→          "Ovarian Cyst",
+  1915→          "Endometrioma",
+  1916→        ],
+  1917→      },
+  1918→      {
+  1919→        id: "uterus",
+  1920→        name: "Uterus",
+  1921→        latinName: "Uterus",
+  1922→        weight: "~50–70 g (non-pregnant)",
+  1923→        overview:
+  1924→          "A thick-walled, pear-shaped muscular organ consisting of fundus, body, isthmus, and cervix. The endometrium undergoes cyclic proliferation and shedding, and the myometrium contracts during labor.",
+  1925→        location: "Pelvic cavity, between bladder (anterior) and rectum (posterior).",
+  1926→        function:
+  1927→          "Receives and supports the fertilized ovum, houses the developing embryo/fetus, and contracts during labor to deliver the baby.",
+  1928→        bloodSupply:
+  1929→          "Uterine artery from the internal iliac, with anastomoses to the ovarian artery; veins drain to the internal iliac.",
+  1930→        nerveSupply:
+  1931→          "Pelvic splanchnic nerves (parasympathetic S2–S4) and inferior hypogastric plexus (sympathetic T10–L1).",
+  1932→        clinicalImportance:
+  1933→          "Endometriosis — endometrial tissue outside the uterus — causes dysmenorrhea and infertility; fibroids are the most common benign uterine tumor.",
+  1934→        commonDiseases: [
+  1935→          "Endometriosis",
+  1936→          "Uterine Fibroids",
+  1937→          "Endometrial Cancer",
+  1938→          "Adenomyosis",
+  1939→        ],
+  1940→      },
+  1941→      {
+  1942→        id: "fallopian-tubes",
+  1943→        name: "Fallopian Tubes",
+  1944→        latinName: "Tubae Uterinae",
+  1945→        weight: "~5 g",
+  1946→        overview:
+  1947→          "Paired 10-cm muscular tubes with fimbriated openings near the ovaries. Their ampulla is the usual site of fertilization, after which the embryo travels to the uterus over ~3–4 days.",
+  1948→        location: "Within the upper free edge of the broad ligament, extending laterally from the uterine cornua.",
+  1949→        function:
+  1950→          "Capture the released ovum, provide the site of fertilization, and transport the developing embryo to the uterus via ciliary action and peristalsis.",
+  1951→        bloodSupply:
+  1952→          "Uterine and ovarian arteries via anastomoses along the tube.",
+  1953→        nerveSupply:
+  1954→          "Pelvic and ovarian plexuses.",
+  1955→        clinicalImportance:
+  1956→          "Ectopic pregnancy most commonly implants in the ampulla and may rupture causing life-threatening hemorrhage; tubal damage from PID causes infertility.",
+  1957→        commonDiseases: [
+  1958→          "Ectopic Pregnancy",
+  1959→          "Pelvic Inflammatory Disease",
+  1960→          "Tubal Infertility",
+  1961→          "Hydrosalpinx",
+  1962→        ],
+  1963→      },
+  1964→    ],
+  1965→  },
+  1966→
+  1967→  // --------------------------------------------------------------------------
+  1968→  {
+  1969→    id: "integumentary",
+  1970→    name: "Integumentary System",
+  1971→    latinName: "Systema Integumentum",
+  1972→    icon: "Layers",
+  1973→    color: "#fdcb6e",
+  1974→    tagline: "Your largest organ — and your first line of defense.",
+  1975→    description:
+  1976→      "The integumentary system comprises the skin and its appendages — hair, nails, and glands — and is the largest organ of the body by surface area (~2 m²) and weight (~4 kg). It protects against pathogens, regulates temperature, senses the environment, and synthesizes vitamin D.",
+  1977→    funFact:
+  1978→      "You shed about 30,000–40,000 dead skin cells every minute — your entire outer skin layer is replaced roughly every 28 days.",
+  1979→    stats: [
+  1980→      { label: "Surface Area", value: "~2 m²" },
+  1981→      { label: "Weight", value: "~4 kg" },
+  1982→      { label: "Layers", value: "2 main" },
+  1983→      { label: "Renewal Cycle", value: "~28 days" },
+  1984→    ],
+  1985→    organs: [
+  1986→      {
+  1987→        id: "epidermis",
+  1988→        name: "Epidermis",
+  1989→        latinName: "Epidermis",
+  1990→        overview:
+  1991→          "The outermost stratified squamous keratinized epithelium, 0.05–1.5 mm thick, composed of 4–5 layers: stratum basale, spinosum, granulosum, lucidum (only in thick skin), and corneum. It is avascular and renews every ~28 days.",
+  1992→        location: "Outermost layer of the skin.",
+  1993→        function:
+  1994→          "Provides a waterproof barrier, protects against pathogens and UV damage, and houses immune sentinel cells (Langerhans cells) and melanocytes.",
+  1995→        bloodSupply:
+  1996→          "Avascular; nourished by diffusion from the underlying dermal papillae.",
+  1997→        nerveSupply:
+  1998→          "Free nerve endings transmit pain, itch, and temperature; specialized receptors for fine touch are also present.",
+  1999→        clinicalImportance:
+  2000→          "The stratum basale regenerates after superficial burns; deeper burns that destroy the basal layer require skin grafting.",
+
+[showing lines 1-2000 of 2684; use offset=2001 with limit to continue reading]
